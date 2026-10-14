@@ -526,9 +526,21 @@ coming, and doing them now teaches the wrong lesson.
    match the `Request` and `Response` types from Step 5.
 2. **A written answer to four questions**, in your repo:
    1. What is one thing you do at work this could take over?
+
+I personally do not perform this task, but payroll reps are responsible for manually extracting the data from PDFs and hand entering it into our payroll system.
+
    2. What exactly goes in — a string, a file, several fields?
+
+A file, jpeg or pdf, on our internal payroll template.
+
    3. What comes back, and who reads it?
+
+A csv file that has a standard import process to our payroll system.
+
    4. What did you name it, and why would an agent pick it correctly?
+
+I am not sure what this is asking.
+
 3. **The endpoint has a place in the UI.** It does not have to be pretty; it has
    to work.
 4. **The frontend is meaningfully yours** — restyled, or given a system-prompt
@@ -605,9 +617,14 @@ Hold the thought — Step 10 is about to make it concrete.
    `localhost:7860`.
 2. **One paragraph** naming the CDN dependency and what you would do about it on
    a network that blocks it.
+
+On a network that blocks the gradio client, I would download a pinned version of the client during the image build, store it under frontend/vendor/, serve it from the application’s own /vendor route, and change the import to that local path. The CDN host is then contacted only during the build, by the build system, which can fetch it through the firm’s approved npm mirror or artifact proxy, and no user’s browser reaches an outside host at runtime. I would also pin the version and verify a checksum in the Dockerfile so the vendored file cannot change between builds, and I would disable the analytics and model-price downloads that Gradio and LiteLLM attempt by default so the container’s only outbound destination is the model endpoint.
+
 3. **One or two sentences** on what a container image captures that a virtual
    environment does not — and why that difference is what makes the image the
    thing you hand to a platform team.
+
+A container image captures the operating system layer, the Python interpreter, system libraries, exact package versions, vendored assets such as the JavaScript client, and the start command, while a virtual environment captures only the Python packages and relies on whatever OS and interpreter the host provides. This makes the image a complete, self-contained unit that a platform team can scan, sign, and run without reproducing the developer’s machine, and the same bytes run in every environment.
 
 ---
 

@@ -19,7 +19,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv export --frozen --no-dev --no-emit-project -o requirements.txt \
  && uv pip install --system --no-cache -r requirements.txt
 
-COPY llm.py app.py ./
+COPY llm.py app.py schema.py ./
 COPY frontend/ ./frontend/
 
 # Don't run as root. Your security review will ask about this.

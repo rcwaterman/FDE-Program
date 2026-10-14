@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Rename this. It is your app. -->
-    <title>Your AI Application</title>
+    <title>Payroll Timesheet Extraction</title>
     <style>
       body {
         font-family: system-ui, sans-serif;
@@ -13,6 +12,7 @@
         padding: 0 1rem;
         line-height: 1.5;
       }
+      h2 { margin-top: 2.5rem; }
       #log {
         border: 1px solid #ccc;
         border-radius: 6px;
@@ -27,15 +27,61 @@
       form { display: flex; gap: 0.5rem; }
       input { flex: 1; padding: 0.5rem; font: inherit; }
       button { padding: 0.5rem 1rem; font: inherit; }
+
+      /* --- Extraction section --- */
+      #extract { border: 1px solid #ccc; border-radius: 6px; padding: 1rem; }
+      #pick {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border: 1px solid #888;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #pick:hover { background: #f4f4f4; }
+      #file-name { margin-left: 0.75rem; color: #555; }
+      .extract-row { display: flex; align-items: center; gap: 1rem; margin-top: 0.75rem; }
+      .extract-row input[type="number"] { flex: none; width: 4.5rem; }
+      #extract-status { margin-top: 0.75rem; color: #555; }
+      #extract-status.error { color: #b00020; }
+      #result table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      #result th, #result td {
+        text-align: left;
+        padding: 0.3rem 0.5rem;
+        border-bottom: 1px solid #e5e5e5;
+        font-size: 0.9rem;
+      }
+      #result th { background: #f4f4f4; }
+      .status-low_confidence { background: #fff4d6; }
+      .status-unreadable { background: #fde0e0; }
+      .muted { color: #888; }
+      #why { margin-top: 0.75rem; font-size: 0.9rem; }
     </style>
   </head>
   <body>
-    <h1>Your AI Application</h1>
-    <p>
-      This is a deliberately plain frontend. Making it good is your job — open
-      this file in VS Code and point Claude Code at it.
-    </p>
+    <h1>Payroll Timesheet Extraction</h1>
 
+    <section id="extract">
+      <h2 style="margin-top: 0">Extract a timesheet record</h2>
+      <p>Upload a payroll timesheet as a JPEG or PDF.</p>
+
+      <!-- The file input is hidden; the label is the visible button. -->
+      <input type="file" id="scan" accept="image/jpeg,application/pdf" hidden />
+      <label for="scan" id="pick">Choose file</label>
+      <span id="file-name">No file selected</span>
+
+      <div class="extract-row">
+        <label>
+          PDF page
+          <input type="number" id="page" value="1" min="1" />
+        </label>
+        <button type="button" id="extract-btn">Extract</button>
+      </div>
+
+      <div id="extract-status"></div>
+      <div id="result"></div>
+    </section>
+
+    <h2>Chat</h2>
     <div id="log"></div>
     <form id="form">
       <input id="input" placeholder="Ask something..." autocomplete="off" />
@@ -50,6 +96,10 @@
       import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 
       const client = await Client.connect(window.location.origin);
+
+      // ---------------------------------------------------------------------
+      // Chat (unchanged)
+      // ---------------------------------------------------------------------
       const log = document.getElementById("log");
       const form = document.getElementById("form");
       const input = document.getElementById("input");
@@ -91,6 +141,105 @@
 
         history.push({ role: "user", content: message });
         history.push({ role: "assistant", content: reply });
+      });
+
+      // ---------------------------------------------------------------------
+      // Timesheet extraction
+      // ---------------------------------------------------------------------
+      const scanInput = document.getElementById("scan");
+      const fileName = document.getElementById("file-name");
+      const pageInput = document.getElementById("page");
+      const extractBtn = document.getElementById("extract-btn");
+      const statusEl = document.getElementById("extract-status");
+      const resultEl = document.getElementById("result");
+
+      scanInput.addEventListener("change", () => {
+        fileName.textContent = scanInput.files[0]?.name ?? "No file selected";
+      });
+
+      // File -> base64 text (without the "data:...;base64," prefix).
+      const toBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(",")[1]);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+
+      function setStatus(text, isError = false) {
+        statusEl.textContent = text;
+        statusEl.className = isError ? "error" : "";
+      }
+
+      // Build a table from {field: {value, status}}. textContent is used for
+      // every cell so model output is never interpreted as HTML.
+      function renderRecord(record) {
+        const table = document.createElement("table");
+        const head = table.createTHead().insertRow();
+        for (const h of ["Field", "Value", "Status"]) {
+          const th = document.createElement("th");
+          th.textContent = h;
+          head.appendChild(th);
+        }
+        const body = table.createTBody();
+        for (const [field, cell] of Object.entries(record)) {
+          const row = body.insertRow();
+          row.className = `status-${cell.status}`;
+          row.insertCell().textContent = field;
+          const valueCell = row.insertCell();
+          if (cell.value === null || cell.value === undefined) {
+            valueCell.textContent = "(empty)";
+            valueCell.className = "muted";
+          } else {
+            valueCell.textContent = String(cell.value);
+          }
+          row.insertCell().textContent = cell.status;
+        }
+        return table;
+      }
+
+      function renderResponse(parsed) {
+        resultEl.replaceChildren();
+        // Accepts a single record ({output, why}) or a list ({records: [...]}).
+        const items = parsed.records ?? [parsed];
+        items.forEach((item, i) => {
+          if (items.length > 1) {
+            const h = document.createElement("h3");
+            h.textContent = `Row ${i + 1}`;
+            resultEl.appendChild(h);
+          }
+          resultEl.appendChild(renderRecord(item.output ?? item));
+          if (item.why) {
+            const why = document.createElement("div");
+            why.id = "why";
+            why.textContent = item.why;
+            resultEl.appendChild(why);
+          }
+        });
+      }
+
+      extractBtn.addEventListener("click", async () => {
+        const file = scanInput.files[0];
+        if (!file) {
+          setStatus("Choose a JPEG or PDF first.", true);
+          return;
+        }
+
+        extractBtn.disabled = true;
+        resultEl.replaceChildren();
+        setStatus("Extracting...");
+        try {
+          const res = await client.predict("/extract_timesheet_record", {
+            scan_base64: await toBase64(file),
+            page: Number(pageInput.value) || 1,
+          });
+          renderResponse(JSON.parse(res.data[0]));
+          setStatus("Done. Rows marked low_confidence or unreadable need review.");
+        } catch (err) {
+          setStatus("Error: " + (err.message || JSON.stringify(err)), true);
+        } finally {
+          extractBtn.disabled = false;
+        }
       });
     </script>
   </body>
