@@ -11,7 +11,7 @@ Use roles, not names. This is a public fork.
 
 | Week | Who (role) | What you asked | What you learned | Follow-up |
 | --- | --- | --- | --- | --- |
-| 1 | <!-- e.g. Platform Engineering lead --> | <!-- where would a container run here? --> | <!-- --> | <!-- --> |
+| 1 | MLOps Engineer | What is the optimal extraction method for phase 1 of the project | A targetted OCR model can extract text in regions of the image and raise an exception when the bounding box of the text exceeds the target region | TBD |
 
 ---
 

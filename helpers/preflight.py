@@ -198,3 +198,6 @@ def check_egress(hosts=DEFAULT_HOSTS, *, timeout: float = 6.0,
     report.probes.sort(key=lambda p: order.get(p.host, 999))
     report.proxy_env = {k: os.environ[k] for k in PROXY_VARS if os.environ.get(k)}
     return report
+
+if __name__ == '__main__':
+    print(check_egress())
