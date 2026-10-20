@@ -11,11 +11,8 @@ If you cannot name what you did not do, you did not choose.
 
 | Week | Decision | What you rejected | Why | What would change your mind |
 | --- | --- | --- | --- | --- |
-| 3 | <!-- retrieval approach --> | <!-- --> | <!-- --> | <!-- --> |
-| 5 | <!-- agent architecture --> | <!-- --> | <!-- --> | <!-- --> |
-| 6 | <!-- guardrail level --> | <!-- --> | <!-- --> | <!-- --> |
-| 7 | <!-- memory type --> | <!-- --> | <!-- --> | <!-- --> |
-| 8 | <!-- model --> | <!-- --> | <!-- --> | <!-- --> |
+| 1 | OCR pipeline or agent | I rejected the agent approach | The OCR approach will be less semantically accurate, but it will run locally more reliably and it is more deterministic. | If the OCR model does not extract semantic variance in the handwritten instructions, an agentic VLM approach can fill that gap. |
+
 
 ---
 

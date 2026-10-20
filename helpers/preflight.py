@@ -250,3 +250,6 @@ def _proxy_env() -> dict[str, str]:
         seen[name.upper()] = value
         env[name] = value
     return env
+
+if __name__ == '__main__':
+    print(check_egress())

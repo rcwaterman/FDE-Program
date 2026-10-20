@@ -6,9 +6,9 @@
   That is on purpose.
 -->
 
-**Department:** <!-- your answer here -->
+**Department:** Payroll
 
-**Working title:** <!-- your answer here -->
+**Working title:** Payroll Submission Automation
 
 ---
 
@@ -16,23 +16,23 @@
 
 **Who has it?** One real role, not a department.
 
-<!-- your answer here -->
+Payroll Representatives
 
 **What are they trying to do?**
 
-<!-- your answer here -->
+Enter client payroll information into our internal payroll processing system.
 
 **How do they handle it today?**
 
-<!-- your answer here -->
+They manually review the handwritten, unstructured data and then hand-enter it into our system.
 
 **What does that cost — time, money, risk, or relationships?**
 
-<!-- your answer here -->
+This process takes significantly longer for payroll reps, costing them time toward higher value tasks and costing the company operational overhead.
 
 **The problem in one sentence. No solution in it.**
 
-<!-- your answer here -->
+A dramatic reduction in payroll processing time as a result of manual entry for unstructured, handwritten payroll data.
 
 ---
 
@@ -40,11 +40,11 @@
 
 **What does the new world look like for that person?**
 
-<!-- your answer here -->
+The payroll reps will act as humans in the loop, performing a review instead of the data entry.
 
 **How would the firm measure it? Which numbers should move?**
 
-<!-- your answer here -->
+There should be a decrease in the time it takes to process one payroll.
 
 ---
 
@@ -52,15 +52,15 @@
 
 **Your solution in one sentence.**
 
-<!-- your answer here -->
+A pipeline with a VLM backend that extracts handwritten data and structures it for automated entry into the payroll database.
 
 **Input → Output.** Be specific enough that someone could build it wrong and you
 would notice.
 
 | | |
 | --- | --- |
-| **In** | <!-- your answer here --> |
-| **Out** | <!-- your answer here --> |
+| **In** | Client payroll form containing the following handwritten information: Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional) |
+| **Out** | A csv containing the following information: Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional)|
 
 ---
 

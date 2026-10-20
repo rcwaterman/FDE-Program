@@ -255,15 +255,15 @@ graded* — they are how you work out what the challenge is going to ask you for
 This is the graded part. Every item comes from a numbered step in the technical
 challenge, which carries the full detail.
 
-- [ ] **`use_case/CHARTER.md` filled in** from the Getting to Concreteness form — no template text left
-- [ ] **`Request` and `Response` types** in your app, with a `solve()` signature, matching the charter's In → Out row
-- [ ] **The agent-or-pipeline decision** in `use_case/decisions.md`, with the option you rejected
-- [ ] **Five golden examples, written by hand**, in `use_case/evals/golden.jsonl` — one an edge case, one a decline
-- [ ] A second `@app.api` endpoint for your own work, running, implementing the contract
-- [ ] The app running in a Docker container on your machine
-- [ ] Your infrastructure answers — where this would actually live
-- [ ] Vibe check, with the aspect named for every prompt
-- [ ] `use_case/` updated and pushed to your repo
+- [ x ] **`use_case/CHARTER.md` filled in** from the Getting to Concreteness form — no template text left
+- [ x ] **`Request` and `Response` types** in your app, with a `solve()` signature, matching the charter's In → Out row
+- [ x ] **The agent-or-pipeline decision** in `use_case/decisions.md`, with the option you rejected
+- [ x ] **Five golden examples, written by hand**, in `use_case/evals/golden.jsonl` — one an edge case, one a decline
+- [ x ] A second `@app.api` endpoint for your own work, running, implementing the contract
+- [ x ] The app running in a Docker container on your machine
+- [ x ] Your infrastructure answers — where this would actually live
+- [ x ] Vibe check, with the aspect named for every prompt
+- [ x ] `use_case/` updated and pushed to your repo
 
 ### 📤 Share
 
