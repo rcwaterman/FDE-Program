@@ -62,7 +62,9 @@ Verdict: Open network, public CAs, no proxy. Nothing here will bite you.
 Yes, with the caveat that I will be running the model locally.
 
 ---
-
+## Week 2
+A local model is not ideal for this application given the findings from this week. We will be shifting over to Sonnet 5.5 with a dedicated api endpoint for this project. 
+---
 ## Week 9 — the full checklist
 
 <!--
