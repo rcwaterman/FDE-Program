@@ -78,6 +78,20 @@ week4 = [
     "langchain-community<0.4",    # ragas' own pin; unpinned, `import ragas` fails
 ]
 
+# The payroll pipeline and its review app (src/). Opt-in, because the curriculum
+# does not need them, and the Docker image installs this group.
+#
+#     uv sync --inexact --group review-app
+review-app = [
+    "anthropic>=0.40",
+    "streamlit>=1.40",
+    "pandas>=2.2",
+    "pypdfium2>=4.30",
+    "openpyxl>=3.1",
+    "jsonschema>=4.18",
+    "simple-salesforce>=1.12",    # src/data_retrieval only; the pipeline imports it lazily
+]
+
 # ---------------------------------------------------------------------------
 # torch wheels: CPU by default, and that is a real choice, not a limitation.
 #

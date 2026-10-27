@@ -1,0 +1,1445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:payroll-attachment-extraction:v2",
+  "title": "Payroll Attachment Extraction Record",
+  "description": "One record per source PDF. Stored one record per line in payroll_extractions.jsonl. Replaces the v1 Excel template tabs (Documents, Employees, Pay_Lines, Permanent_Deductions, Time_Punches, Direct_Deposit, Report_Totals, Signatures, Page_Transcriptions, Review_Flags, Salesforce_Verification).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "source",
+    "document",
+    "employees",
+    "pay_items",
+    "review_flags"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "record_id": {
+      "type": "string",
+      "description": "PDF filename without extension (case number + ContentDocument Id)."
+    },
+    "extraction": {
+      "type": "object",
+      "description": "Run metadata.",
+      "properties": {
+        "extracted_at": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string",
+          "description": "e.g. 'visual-read-200dpi', 'text-layer', 'converted-from-v1'"
+        },
+        "batch": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "review_status": {
+          "enum": [
+            "auto_ok",
+            "needs_review",
+            "failed"
+          ]
+        },
+        "review_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "file_name",
+        "case_number",
+        "content_document_id",
+        "page_count"
+      ],
+      "properties": {
+        "file_name": {
+          "type": "string"
+        },
+        "case_number": {
+          "type": "string",
+          "pattern": "^[0-9]{8}$"
+        },
+        "content_document_id": {
+          "type": "string",
+          "pattern": "^069[A-Za-z0-9]{15}$"
+        },
+        "byte_size": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "page_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text_layer": {
+          "enum": [
+            "none",
+            "partial",
+            "full",
+            null
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "document": {
+      "type": "object",
+      "required": [
+        "doc_type"
+      ],
+      "properties": {
+        "doc_type": {
+          "enum": [
+            "coad_payroll_timesheet_report",
+            "coad_accrued_hours_report",
+            "punch_time_card",
+            "time_card_detail_report",
+            "handwritten_payroll_note",
+            "client_payroll_summary",
+            "fax_cover_sheet",
+            "direct_deposit_form",
+            "new_hire_form",
+            "tax_form",
+            "other"
+          ]
+        },
+        "doc_type_detail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "form_variant": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Report footer title, e.g. 'My Payroll TimeSheet (Every Payroll)', 'My Time Sheet (Long Format)'."
+        },
+        "segments": {
+          "type": "array",
+          "description": "Page ranges when one PDF contains several document types or clients (e.g. fax cover + timesheet, or a second client's report).",
+          "items": {
+            "type": "object",
+            "required": [
+              "pages",
+              "doc_type"
+            ],
+            "properties": {
+              "pages": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "doc_type": {
+                "type": "string"
+              },
+              "client_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "client_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "client": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/sourcedString"
+            },
+            "number": {
+              "$ref": "#/$defs/sourcedString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "pay_period": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "$ref": "#/$defs/sourcedDate"
+            },
+            "end": {
+              "$ref": "#/$defs/sourcedDate"
+            },
+            "check_date": {
+              "$ref": "#/$defs/sourcedDate"
+            },
+            "frequency": {
+              "$ref": "#/$defs/sourcedString",
+              "description": "W, B, S, M, Q or the word as printed."
+            },
+            "period_number": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "summary_number": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "role"
+            ],
+            "properties": {
+              "role": {
+                "enum": [
+                  "payroll_contact",
+                  "payroll_specialist",
+                  "submitted_by",
+                  "approver",
+                  "other"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fax": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "page": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "header_fields": {
+          "type": "object",
+          "description": "Any other labelled header value as printed (Call Date, Call Time, Del, Generated On, Fax cover fields). Keys are the printed labels.",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          }
+        },
+        "instructions": {
+          "type": "array",
+          "description": "Free-text instructions on the document that are not a single pay item (e.g. 'MUST NET $509', 'All employees - thank you', 'Remove').",
+          "items": {
+            "$ref": "#/$defs/instruction"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "code_legend": {
+      "type": "array",
+      "description": "Client-specific pay/deduction code legend printed on the document. Drives code -> description and code -> import column mapping.",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "description",
+          "category"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "earning",
+              "deduction",
+              "tax",
+              "other"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "employees": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "employee_ref",
+          "name"
+        ],
+        "properties": {
+          "employee_ref": {
+            "type": "string",
+            "description": "Stable key within the record, e.g. 'E001'. pay_items reference it."
+          },
+          "name": {
+            "type": "object",
+            "required": [
+              "full"
+            ],
+            "properties": {
+              "full": {
+                "type": "string"
+              },
+              "first": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "last": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "employee_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "clock_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pay_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "W-2, 1099, Salary, Hourly as printed."
+          },
+          "status": {
+            "enum": [
+              "active",
+              "remove_requested",
+              "new_hire",
+              "terminated",
+              "payee_only",
+              "unknown"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Printed roster fields keyed by snake_case label: salary, rate_1..rate_3, ytd_gross, last_raise_date, start_date, birth_date, work_week, vac_hours_balance, sick_hours_balance, dept_loc, tax_federal, tax_state, tax_local, freq_code, job_title. Add new keys as layouts require.",
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "null"
+              ]
+            }
+          },
+          "recurring_deductions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "amount": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "ytd": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "balance": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "change_requested": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Handwritten change, e.g. '225.00 -> 500.00'."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pay_items": {
+      "type": "array",
+      "description": "One row per employee x pay item. Replaces Pay_Lines.",
+      "items": {
+        "type": "object",
+        "required": [
+          "item_id",
+          "item_type",
+          "status",
+          "provenance"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "description": "e.g. 'P0001'."
+          },
+          "employee_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "employee_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Denormalized for readability."
+          },
+          "item_type": {
+            "enum": [
+              "earning",
+              "deduction",
+              "reimbursement",
+              "exception",
+              "deduction_change",
+              "other"
+            ]
+          },
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code_description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quantity": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "value",
+              "unit"
+            ],
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "enum": [
+                  "hours",
+                  "days",
+                  "units"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "rate": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "amount": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "work_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dept_override": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "calculation_shown": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "submitted",
+              "printed_default",
+              "struck_through",
+              "superseded",
+              "excluded",
+              "added_from_email"
+            ],
+            "description": "submitted = entered by client for this payroll; printed_default = pre-printed recurring value not touched by client; superseded/excluded/added_from_email = changed by Salesforce email thread."
+          },
+          "provenance": {
+            "type": "object",
+            "required": [
+              "source"
+            ],
+            "properties": {
+              "source": {
+                "enum": [
+                  "handwritten",
+                  "printed",
+                  "typed",
+                  "email",
+                  "derived"
+                ]
+              },
+              "page": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "location": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "e.g. 'Regular column, row 3'."
+              },
+              "raw_text": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Value exactly as written, when it differs from the normalized value."
+              },
+              "email_message_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "review_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "comment": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "time_punches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "employee_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "employee_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "in": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "out": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "hours": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "source": {
+            "enum": [
+              "handwritten",
+              "printed",
+              "typed",
+              "clock_stamp"
+            ]
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "comment": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "direct_deposit": {
+      "type": "array",
+      "description": "Sensitive: contains SSN and bank numbers as written.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "employee_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ssn": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "action": {
+            "enum": [
+              "new",
+              "change",
+              "cancel",
+              null
+            ]
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "seq": {
+                  "type": "integer"
+                },
+                "account_type": {
+                  "enum": [
+                    "checking",
+                    "savings",
+                    "other",
+                    null
+                  ]
+                },
+                "routing_number": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "account_number": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "deposit_type": {
+                  "enum": [
+                    "entire_net",
+                    "flat",
+                    "percent",
+                    "remainder",
+                    null
+                  ]
+                },
+                "deposit_value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "struck_through": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "bank_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "signed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "signature_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "comment": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "totals": {
+      "type": "array",
+      "description": "Totals written or printed on the document, with automatic reconciliation against pay_items.",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "document_value"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "scope": {
+            "enum": [
+              "page",
+              "document",
+              "employee",
+              "cover_sheet"
+            ]
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Pay code the total covers, if any (1 = Regular, 2 = Overtime, ...)."
+          },
+          "measure": {
+            "enum": [
+              "hours",
+              "amount",
+              "count",
+              null
+            ]
+          },
+          "document_value": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "source": {
+            "enum": [
+              "handwritten",
+              "printed",
+              "typed"
+            ]
+          },
+          "extracted_sum": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "difference": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "reconciles": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "column": {
+            "enum": [
+              "regular",
+              "overtime",
+              "other_hours",
+              "earnings",
+              "deduction",
+              "total_hours",
+              "total_amount",
+              "other",
+              null
+            ],
+            "description": "Report column the total sits under (added in 2.0.1; optional)."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "signer": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pages": {
+      "type": "array",
+      "description": "Full-text capture per page. Replaces Page_Transcriptions.",
+      "items": {
+        "type": "object",
+        "required": [
+          "page"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "orientation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "printed_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "handwritten_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "severity",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Machine-readable category, e.g. TOTAL_MISMATCH, ILLEGIBLE, CODE_INFERRED, OVER_80_HOURS, MISSING_HEADER, DAYS_NOT_HOURS, SF_MISMATCH, EMAIL_AMENDMENT."
+          },
+          "severity": {
+            "enum": [
+              "info",
+              "warning",
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "item_ids / employee_refs affected."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "salesforce_verification": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "queried_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "case": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "subject": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "contact_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "supplied_email": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "account": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "employer_unique_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "payroll_frequency": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "unique_ee_paid": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "content_document": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "content_size": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "size_matches": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "field",
+              "result"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "extracted": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "salesforce": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sf_source": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "result": {
+                "enum": [
+                  "match",
+                  "corroborated",
+                  "filled_from_salesforce",
+                  "mismatch",
+                  "superseded",
+                  "not_on_document",
+                  "info"
+                ]
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "email_amendments": {
+          "type": "array",
+          "description": "Instructions in the case email thread that add, change or cancel pay items.",
+          "items": {
+            "type": "object",
+            "required": [
+              "instruction",
+              "action"
+            ],
+            "properties": {
+              "email_message_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message_date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "from": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "instruction": {
+                "type": "string"
+              },
+              "action": {
+                "enum": [
+                  "add",
+                  "modify",
+                  "exclude",
+                  "confirm",
+                  "info"
+                ]
+              },
+              "affects": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "human_review": {
+      "type": "object",
+      "description": "Human reviewer decisions and field-level accept/reject/edit actions. Non-destructive, never overwrites pipeline-owned fields.",
+      "properties": {
+        "reviewed_by": {
+          "type": "string",
+          "description": "Email address of the reviewer."
+        },
+        "status": {
+          "enum": [
+            "in_progress",
+            "complete"
+          ],
+          "description": "in_progress = some items decided, complete = all items decided."
+        },
+        "created_at": {
+          "type": "string",
+          "description": "ISO 8601 timestamp when human_review was first created."
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "ISO 8601 timestamp of the last decision in this record."
+        },
+        "field_decisions": {
+          "type": "array",
+          "description": "Per-item accept/reject/edit decisions.",
+          "items": {
+            "type": "object",
+            "required": [
+              "item_id",
+              "decision",
+              "decided_by",
+              "decided_at"
+            ],
+            "properties": {
+              "item_id": {
+                "type": "string",
+                "description": "Reference to pay_items[].item_id."
+              },
+              "decision": {
+                "enum": [
+                  "accept",
+                  "reject",
+                  "edit"
+                ],
+                "description": "accept = value is correct; reject = value should be excluded; edit = corrected_value holds the fix."
+              },
+              "corrected_value": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "Only the field(s) that were changed (e.g. {\"amount\": 412.50}), not a full item copy. null for accept/reject."
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Optional free-text reason for the decision."
+              },
+              "decided_by": {
+                "type": "string",
+                "description": "Email address of the reviewer who made this decision."
+              },
+              "decided_at": {
+                "type": "string",
+                "description": "ISO 8601 timestamp."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "sourcedString": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "enum": [
+            "printed",
+            "handwritten",
+            "typed",
+            "salesforce",
+            "email",
+            "file_title",
+            null
+          ]
+        },
+        "page": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            null
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "sourcedDate": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ISO 8601 YYYY-MM-DD."
+        },
+        "raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "enum": [
+            "printed",
+            "handwritten",
+            "typed",
+            "salesforce",
+            "email",
+            "file_title",
+            null
+          ]
+        },
+        "page": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            null
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "instruction": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "employee_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "page": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "source": {
+          "enum": [
+            "handwritten",
+            "printed",
+            "typed"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "remove_employee",
+            "net_pay_target",
+            "garnishment",
+            "deduction_change",
+            "rate_change",
+            "tax_only",
+            "general",
+            "other"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

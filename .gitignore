@@ -13,6 +13,16 @@ __marimo__/
 .ruff_cache/
 .pytest_cache/
 
+data/
+
+# Pipeline runs and review state hold extracted client data (PII). Never commit them.
+runs/
+src/data/
+**/review_records/
+**/review_records.jsonl
+**/.cache/
+.DS_Store
+
 # Built artifacts (regenerate with `make html`); the .ipynb mirrors ARE committed.
 _build/
 

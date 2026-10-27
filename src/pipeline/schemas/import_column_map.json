@@ -1,0 +1,325 @@
+{
+  "description": "Maps CoAd pay codes in pay_items to import template columns. Defaults cover codes whose legend description was identical (or nearly) across the 30 batch-2 client legends: 1, 2, 19, 20, 23-28; every other code resolves through the record's own code_legend plus a client override. Only 'Default Earning by Column Import' is populated: its columns were observed in client attachments (e.g. 02030895_069Uy00000p3tsGIAQ). The other two templates are placeholders until their layouts are obtained.",
+  "version": "2026-10-09",
+  "templates": {
+    "default_earning_by_column_import": {
+      "status": "observed_in_attachments",
+      "row_grain": "one row per employee",
+      "key_columns": [
+        "Employee Number",
+        "Employee First Name",
+        "Employee Last Name",
+        "Pay Rate(Optional)"
+      ],
+      "value_columns": [
+        "Reg Hours",
+        "OT Hours",
+        "Vacation Hours",
+        "Sick Hours",
+        "Holiday Hours",
+        "PTO Hours",
+        "Other Hours",
+        "Bonus Amount",
+        "Commission Amount",
+        "Other Amount",
+        "IC Amount"
+      ],
+      "optional_columns": [
+        "Department (optional)",
+        "Project (optional)",
+        "Job (optional)"
+      ],
+      "default_code_map": {
+        "1": {
+          "column": "Reg Hours",
+          "measure": "hours"
+        },
+        "2": {
+          "column": "OT Hours",
+          "measure": "hours"
+        },
+        "19": {
+          "column": "Bonus Amount",
+          "measure": "amount"
+        },
+        "20": {
+          "column": "Other Hours",
+          "measure": "hours",
+          "note": "Double time; no dedicated column observed"
+        },
+        "23": {
+          "column": "Vacation Hours",
+          "measure": "hours"
+        },
+        "24": {
+          "column": "Holiday Hours",
+          "measure": "hours"
+        },
+        "27": {
+          "column": "Commission Amount",
+          "measure": "amount"
+        },
+        "28": {
+          "column": "Other Amount",
+          "measure": "amount"
+        },
+        "25": {
+          "column": "Sick Hours",
+          "measure": "hours",
+          "note": "SICK in all 30 batch-2 legends"
+        },
+        "26": {
+          "column": "PTO Hours",
+          "measure": "hours",
+          "note": "PERSONAL in 29 of 30 legends"
+        }
+      },
+      "legend_keyword_map": {
+        "description": "Fallback when a code is not in default_code_map: match the record's code_legend description.",
+        "SICK": "Sick Hours",
+        "PTO": "PTO Hours",
+        "PERSONAL": "PTO Hours",
+        "VACATION": "Vacation Hours",
+        "HOLIDAY": "Holiday Hours",
+        "BONUS": "Bonus Amount",
+        "COMMISSION": "Commission Amount"
+      },
+      "unmapped_policy": "flag_for_review"
+    },
+    "default_all_earnings_import": {
+      "status": "layout_unknown",
+      "row_grain": "assumed one row per employee per earning code",
+      "default_code_map": {}
+    },
+    "import_template_to_use": {
+      "status": "layout_unknown",
+      "default_code_map": {}
+    },
+    "import_template_charter": {
+      "based_on": "import_template_for_automation",
+      "status": "from_use_case_charter",
+      "source_file": "use_case/CHARTER.md (Out: 19 columns)",
+      "columns": [
+        "Employee Last Name",
+        "Pay Rate(Optional)",
+        "Reg Hours",
+        "OT Hours",
+        "Vacation Hours",
+        "Sick Hours",
+        "Holiday Hours",
+        "PTO Hours",
+        "Other Hours",
+        "Cash Tips Amount",
+        "Credit Tips Amount",
+        "Bonus Amount",
+        "Commission Amount",
+        "Other Amount",
+        "Department (optional)",
+        "Deduction Code (Optional)",
+        "Deduction Amount (Optional)",
+        "Project (optional)",
+        "Job (optional)"
+      ],
+      "extra_columns": [],
+      "deductions_on_earnings_row": true,
+      "department_attribute": "dept_loc"
+    },
+    "import_template_for_automation": {
+      "status": "observed_template_file",
+      "source_file": "docs/import_templates/import_template_for_automation.csv",
+      "encoding": "utf-8-sig",
+      "line_terminator": "\r\n",
+      "row_grain": "one earnings row per employee, then one row per deduction",
+      "supported_doc_types": [
+        "coad_payroll_timesheet_report"
+      ],
+      "date_format": "%m/%d/%Y",
+      "columns": [
+        "Client ID",
+        "Client Name",
+        "Payroll Specialist",
+        "Employee Number",
+        "Employee First Name",
+        "Employee Last Name",
+        "Pay Rate(Optional)",
+        "Reg Hours",
+        "OT Hours",
+        "Vacation Hours",
+        "Sick Hours",
+        "Holiday Hours",
+        "PTO Hours",
+        "Other Hours",
+        "Cash Tips Amount",
+        "Credit Tips Amount",
+        "Bonus Amount",
+        "Commission Amount",
+        "Other Amount",
+        "Department (optional)",
+        "Deduction Code (Optional)",
+        "Deduction Amount (Optional)",
+        "Project (optional)",
+        "Job (optional)",
+        "Review Flags (optional)",
+        "Total Pay"
+      ],
+      "extra_columns": [
+        "Pay Period Start",
+        "Pay Period End",
+        "Check Date",
+        "Pay Frequency",
+        "Employee Action",
+        "Source Code/Label"
+      ],
+      "default_code_map": {
+        "1": {
+          "column": "Reg Hours",
+          "measure": "hours"
+        },
+        "2": {
+          "column": "OT Hours",
+          "measure": "hours"
+        },
+        "19": {
+          "column": "Bonus Amount",
+          "measure": "amount"
+        },
+        "20": {
+          "column": "Other Hours",
+          "measure": "hours",
+          "note": "Double time; no dedicated column"
+        },
+        "23": {
+          "column": "Vacation Hours",
+          "measure": "hours"
+        },
+        "24": {
+          "column": "Holiday Hours",
+          "measure": "hours"
+        },
+        "25": {
+          "column": "Sick Hours",
+          "measure": "hours"
+        },
+        "26": {
+          "column": "PTO Hours",
+          "measure": "hours"
+        },
+        "27": {
+          "column": "Commission Amount",
+          "measure": "amount"
+        },
+        "28": {
+          "column": "Other Amount",
+          "measure": "amount"
+        },
+        "29": {
+          "column": "Other Amount",
+          "measure": "amount",
+          "note": "Retro; no dedicated column"
+        }
+      },
+      "legend_keyword_map": {
+        "description": "Legend descriptions are matched by description_patterns (word-boundary regex), not by substring. Client codes are never mapped by a fixed table unless listed in default_code_map."
+      },
+      "tips_pattern": "\\bTIPS?\\b",
+      "cash_pattern": "\\bCASH\\b",
+      "credit_pattern": "\\b(CREDIT|CARD|CC)\\b",
+      "hours_multipliers": {
+        "Reg Hours": 1.0,
+        "OT Hours": 1.5,
+        "Vacation Hours": 1.0,
+        "Sick Hours": 1.0,
+        "Holiday Hours": 1.0,
+        "PTO Hours": 1.0,
+        "Other Hours": null
+      },
+      "employee_action": {
+        "remove_requested": "REMOVE",
+        "payee_only": "PAYEE ONLY",
+        "new_hire": "NEW HIRE",
+        "terminated": "TERMINATED"
+      },
+      "unmapped_policy": "flag_for_review",
+      "summary_label_pattern": "\\b(TOTAL|TOTALS|SUBTOTAL|SUB ?TOTAL)\\b",
+      "description_patterns": [
+        [
+          "\\b(REG|REGULAR)\\b",
+          "Reg Hours"
+        ],
+        [
+          "\\b(OT|OVER ?TIME)\\b",
+          "OT Hours"
+        ],
+        [
+          "\\bVAC(ATION)?\\b(?!\\s+UNION)",
+          "Vacation Hours"
+        ],
+        [
+          "\\bSICK\\b",
+          "Sick Hours"
+        ],
+        [
+          "\\bHOL(IDAY)?\\b",
+          "Holiday Hours"
+        ],
+        [
+          "\\b(PTO|PERSONAL)\\b",
+          "PTO Hours"
+        ],
+        [
+          "\\bBONUS\\b",
+          "Bonus Amount"
+        ],
+        [
+          "\\bCOMMISSION\\b",
+          "Commission Amount"
+        ],
+        [
+          "\\bDOUBLE\\b",
+          "Other Hours"
+        ],
+        [
+          "\\bOTHER\\b",
+          "OTHER_BY_MEASURE"
+        ]
+      ],
+      "kind_columns": {
+        "tips_cash": "Cash Tips Amount",
+        "tips_credit": "Credit Tips Amount",
+        "tips_unspecified": "Cash Tips Amount",
+        "bonus": "Bonus Amount",
+        "commission": "Commission Amount",
+        "regular": "Reg Hours",
+        "overtime": "OT Hours",
+        "double_time": "Other Hours",
+        "vacation": "Vacation Hours",
+        "sick": "Sick Hours",
+        "holiday": "Holiday Hours",
+        "pto": "PTO Hours",
+        "retro": "Other Amount",
+        "other_pay": "Other Amount"
+      }
+    }
+  },
+  "client_overrides": {
+    "_format": "{client_number: {template: <template key>, code_map: {code: {column, measure}}}}"
+  },
+  "status_policy": {
+    "include": [
+      "submitted",
+      "added_from_email"
+    ],
+    "include_if_confirmed": [
+      "printed_default"
+    ],
+    "exclude": [
+      "struck_through",
+      "superseded",
+      "excluded"
+    ]
+  },
+  "legend_observations": {
+    "consistent": "All 30 batch-2 legends: 1 REGULAR, 2 OVERTIME, 19 BONUS, 23 VACATION, 24 HOLIDAY, 25 SICK. 29 of 30: 26 PERSONAL, 27 COMMISSION, 28 OTHER. 28 of 30: 20 DOUBLE, 29 RETRO. ML MED LOAN (20), SL SS LOAN (19).",
+    "client_specific": "3-6, 11-15, 21, 22, 30-41, 53, 81-96, 101-103, 2xx: meaning varies by client (e.g. 30 = TRAINING / SNOW / HEALTH OPT / CLEANING / MED REIMB). Always resolve from the record's code_legend."
+  }
+}

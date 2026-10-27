@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>html, body { margin: 0; padding: 0; }</style>
+</head>
+<body>
+<script>
+// Minimal, framework-free implementation of the Streamlit Components v1
+// postMessage protocol (no React/build step needed -- see Streamlit docs,
+// "Create a Component > Static HTML"). This component is invisible (zero
+// frame height); its only job is to watch the scroll position of a specific
+// keyed container in the PARENT document (reachable because Streamlit serves
+// component iframes same-origin, with no sandbox attribute restricting
+// cross-frame DOM access -- confirmed empirically before building this) and
+// report back which page's field markers are currently scrolled into view.
+(function () {
+  let listenerAttached = false;
+  let lastReportedPage = null;
+  let ticking = false;
+
+  function sendToStreamlit(type, data) {
+    window.parent.postMessage(Object.assign({ isStreamlitMessage: true, type: type }, data || {}), "*");
+  }
+
+  function setComponentValue(value) {
+    sendToStreamlit("streamlit:setComponentValue", { value: value, dataType: "json" });
+  }
+
+  function setFrameHeight(height) {
+    sendToStreamlit("streamlit:setFrameHeight", { height: height });
+  }
+
+  function componentReady() {
+    sendToStreamlit("streamlit:componentReady", { apiVersion: 1 });
+  }
+
+  function findContainer(containerKey) {
+    try {
+      return window.parent.document.querySelector(".st-key-" + containerKey);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // The "current" page is the page of the last marker that has scrolled to
+  // or past the top of the container's visible area -- i.e. whatever page's
+  // content occupies the top of the currently-visible scroll window.
+  function checkScroll(container) {
+    const markers = container.querySelectorAll("[data-page]");
+    if (!markers.length) return;
+    const containerTop = container.getBoundingClientRect().top;
+    const threshold = containerTop + 40; // small offset so a marker just under the top edge still counts
+
+    let currentPage = markers[0].getAttribute("data-page");
+    for (const marker of markers) {
+      if (marker.getBoundingClientRect().top <= threshold) {
+        currentPage = marker.getAttribute("data-page");
+      } else {
+        break;
+      }
+    }
+
+    if (currentPage !== null && currentPage !== lastReportedPage) {
+      lastReportedPage = currentPage;
+      setComponentValue(parseInt(currentPage, 10));
+    }
+  }
+
+  function onScroll(container) {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      checkScroll(container);
+      ticking = false;
+    });
+  }
+
+  function attach(containerKey, attempt) {
+    attempt = attempt || 0;
+    const container = findContainer(containerKey);
+    if (!container) {
+      // Container may not be in the DOM yet on first render; retry briefly.
+      if (attempt < 20) setTimeout(function () { attach(containerKey, attempt + 1); }, 150);
+      return;
+    }
+    if (!listenerAttached) {
+      container.addEventListener("scroll", function () { onScroll(container); }, { passive: true });
+      listenerAttached = true;
+      checkScroll(container); // report initial position
+    }
+  }
+
+  function onMessage(event) {
+    if (!event.data || event.data.type !== "streamlit:render") return;
+    const args = event.data.args || {};
+    setFrameHeight(0);
+    attach(args.container_key);
+  }
+
+  window.addEventListener("message", onMessage);
+  componentReady();
+})();
+</script>
+</body>
+</html>

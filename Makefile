@@ -77,6 +77,7 @@ check:
 	uv run python scripts/check_deliverables.py
 	uv run --group dev python scripts/check_manifests.py
 	uv run python scripts/check_helpers.py
+	uv run python scripts/check_no_pii.py
 	uv run --group dev python -m pytest tests/ -q
 
 # Runs every notebook in both formats. Minutes, not seconds, so it is not

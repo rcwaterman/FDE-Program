@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "record_amendments",
+  "description": "Payroll instructions found in a case email thread, relative to the pay items extracted from the attachment.",
+  "type": "object",
+  "required": ["amendments"],
+  "additionalProperties": false,
+  "properties": {
+    "amendments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["email_message_id", "action", "instruction_quote"],
+        "additionalProperties": false,
+        "properties": {
+          "email_message_id": { "type": "string" },
+          "action": {
+            "type": "string",
+            "enum": ["add", "modify", "exclude", "confirm", "info"],
+            "description": "add = new pay item; modify = change value of existing item(s); exclude = do not pay existing item(s); confirm = approval or confirmation, no change; info = instruction not about these pay items."
+          },
+          "instruction_quote": { "type": "string", "description": "Exact words from the email." },
+          "target_item_ids": { "type": "array", "items": { "type": "string" }, "description": "item_ids from the provided list that this instruction changes or excludes." },
+          "employee_name": { "type": ["string", "null"] },
+          "new_value": {
+            "type": ["object", "null"],
+            "description": "For add/modify: values as written in the email.",
+            "additionalProperties": false,
+            "properties": {
+              "code_text": { "type": ["string", "null"], "description": "Code or earning type as written (e.g. 'sick', '23', 'vacation')." },
+              "hours_text": { "type": ["string", "null"] },
+              "amount_text": { "type": ["string", "null"] },
+              "rate_text": { "type": ["string", "null"] }
+            }
+          },
+          "relates_to_this_attachment": { "type": "boolean", "description": "False when the instruction is clearly about a different attachment or a future payroll." }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+# The image is code only. Data and secrets are mounted at run time, never copied in.
+.git
+.venv
+.env
+.env.*
+!.env.template
+**/__pycache__
+**/*.pyc
+.DS_Store
+
+# Real client data and everything the pipeline writes from it.
+src/data
+runs
+**/review_records
+**/review_records.jsonl
+**/.cache
+
+# Synthetic inputs are mounted read-only from use_case/data.
+use_case
+
+# Curriculum content, notebooks and tooling the app does not use.
+00_Prerequisites
+00_Quicklinks
+01_Product_Engineering
+02_Open_Weights
+03_Retrieval
+helpers
+scripts
+tests
+*.ipynb
+Claude outputs

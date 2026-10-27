@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "record_page",
+  "description": "What the model reads from ONE page. Values are text exactly as written; the pipeline does all arithmetic, unit conversion and code resolution.",
+  "type": "object",
+  "required": ["page", "page_kind", "header", "code_legend", "employees", "entries", "totals", "instructions", "printed_text", "handwritten_text", "issues"],
+  "additionalProperties": false,
+  "properties": {
+    "page": { "type": "integer", "description": "1-based page number given in the request." },
+    "orientation": { "type": "string", "enum": ["upright", "rotated_90_cw", "rotated_90_ccw", "rotated_180", "unknown"] },
+    "page_kind": {
+      "type": "string",
+      "enum": ["coad_timesheet", "coad_terminated_list", "coad_accrued_hours", "fax_cover_sheet", "punch_time_card",
+               "time_card_detail_report", "handwritten_note", "client_payroll_summary", "direct_deposit_form",
+               "new_hire_form", "tax_form", "blank", "other"]
+    },
+    "header": {
+      "type": "object",
+      "description": "Labelled header/footer values as printed or written. Use null when absent. Add other labelled values under extra.",
+      "additionalProperties": false,
+      "properties": {
+        "client_name": { "type": ["string", "null"] },
+        "client_number": { "type": ["string", "null"] },
+        "form_variant": { "type": ["string", "null"], "description": "Report title in the footer, e.g. '_My Payroll TimeSheet (Every Payroll)'." },
+        "period_begin": { "type": ["string", "null"] },
+        "period_end": { "type": ["string", "null"] },
+        "check_date": { "type": ["string", "null"] },
+        "frequency": { "type": ["string", "null"], "description": "Freq letter or word as printed." },
+        "period_number": { "type": ["string", "null"] },
+        "summary_number": { "type": ["string", "null"] },
+        "call_date": { "type": ["string", "null"] },
+        "call_time": { "type": ["string", "null"] },
+        "delivery": { "type": ["string", "null"] },
+        "specialist": { "type": ["string", "null"] },
+        "specialist_phone": { "type": ["string", "null"] },
+        "payroll_contact": { "type": ["string", "null"] },
+        "payroll_contact_phone": { "type": ["string", "null"] },
+        "generated_on": { "type": ["string", "null"] },
+        "page_label": { "type": ["string", "null"], "description": "e.g. 'Page: 3'." },
+        "extra": { "type": "object", "additionalProperties": { "type": ["string", "null"] } }
+      }
+    },
+    "code_legend": {
+      "type": "array",
+      "description": "Earnings and deductions code legend printed on the page (CoAd footer). Empty if none.",
+      "items": {
+        "type": "object",
+        "required": ["code", "description", "category"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string" },
+          "description": { "type": "string" },
+          "category": { "type": "string", "enum": ["earning", "deduction", "other"] }
+        }
+      }
+    },
+    "employees": {
+      "type": "array",
+      "description": "One per employee block / roster row on this page, in page order.",
+      "items": {
+        "type": "object",
+        "required": ["row_key", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "row_key": { "type": "string", "description": "Employee number if printed, else the name. entries[].row_key refers to this." },
+          "name": { "type": "string" },
+          "employee_number": { "type": ["string", "null"] },
+          "clock_number": { "type": ["string", "null"] },
+          "pay_type": { "type": ["string", "null"] },
+          "printed_fields": {
+            "type": "object",
+            "description": "Every other printed roster value keyed by its column label as printed (e.g. 'Rate 1', 'YTD GROSS', 'Last Rs', 'Start Dt', 'Birth Dt', 'WW', 'Salary', 'Dept/Loc', 'Taxes').",
+            "additionalProperties": { "type": ["string", "null"] }
+          },
+          "recurring_deductions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code"],
+              "additionalProperties": false,
+              "properties": {
+                "code": { "type": "string" },
+                "amount_text": { "type": ["string", "null"] },
+                "ytd_text": { "type": ["string", "null"] },
+                "balance_text": { "type": ["string", "null"] },
+                "change_written": { "type": ["string", "null"], "description": "Handwritten change, e.g. '225.00 struck, 500 written'." }
+              }
+            }
+          },
+          "marks": { "type": "array", "items": { "type": "string" }, "description": "Handwritten words on the block that are not values: 'Remove', 'Term', 'NW', 'Pay salary', check marks." }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "description": "Every value entered for this payroll (handwritten, typed, or pre-printed in an entry column). One per cell value.",
+      "items": {
+        "type": "object",
+        "required": ["row_key", "column", "value_text", "source", "struck_through", "legibility"],
+        "additionalProperties": false,
+        "properties": {
+          "row_key": { "type": ["string", "null"] },
+          "column": {
+            "type": "string",
+            "enum": ["regular", "overtime", "other_hours", "earnings", "deduction", "salary", "exception_rate", "exception_dept", "exception_freq", "hours_generic", "amount_generic"],
+            "description": "CoAd columns: HOURS Regular / Overtime / (Code+Other) = other_hours; EARNINGS Code+Amount = earnings; DEDUCTIONS = deduction; EXCEPTIONS Rate/Dept/Freq. Non-CoAd documents: hours_generic / amount_generic."
+          },
+          "code_written": { "type": ["string", "null"], "description": "Code written or printed beside the value (other_hours, earnings, deduction). Null if none." },
+          "label_written": { "type": ["string", "null"], "description": "Free label written with the value, e.g. 'Reg', 'OT', 'Vac', 'tips', 'Bonus'." },
+          "value_text": { "type": "string", "description": "Exactly as written, e.g. '40.00', '78 1/4', 'Ø', '4 days', '$1,370.40', 'Pay'." },
+          "rate_text": { "type": ["string", "null"], "description": "Rate written with this value (e.g. '17.13' in '80 x 17.13 = 1370.40')." },
+          "amount_text": { "type": ["string", "null"], "description": "Result amount written with this value, if any." },
+          "calculation_text": { "type": ["string", "null"] },
+          "work_date_text": { "type": ["string", "null"] },
+          "source": { "type": "string", "enum": ["handwritten", "printed", "typed"] },
+          "struck_through": { "type": "boolean" },
+          "legibility": { "type": "string", "enum": ["clear", "uncertain", "illegible"] },
+          "alternatives": { "type": "array", "items": { "type": "string" }, "description": "Other plausible readings when uncertain." },
+          "location": { "type": ["string", "null"] },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "totals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["column", "value_text", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "column": { "type": "string", "enum": ["regular", "overtime", "other_hours", "earnings", "deduction", "total_hours", "total_amount", "other"] },
+          "code_written": { "type": ["string", "null"] },
+          "label": { "type": ["string", "null"] },
+          "value_text": { "type": "string" },
+          "source": { "type": "string", "enum": ["handwritten", "printed", "typed"] }
+        }
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text"],
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string" },
+          "row_key": { "type": ["string", "null"] },
+          "source": { "type": "string", "enum": ["handwritten", "printed", "typed"] }
+        }
+      }
+    },
+    "time_punches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date_text"],
+        "additionalProperties": false,
+        "properties": {
+          "row_key": { "type": ["string", "null"] },
+          "date_text": { "type": "string" },
+          "in_out": { "type": "array", "items": { "type": "string" }, "description": "Alternating in/out times as written." },
+          "hours_text": { "type": ["string", "null"] },
+          "source": { "type": "string", "enum": ["handwritten", "printed", "typed", "clock_stamp"] }
+        }
+      }
+    },
+    "direct_deposit": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "employee_name": { "type": ["string", "null"] },
+          "ssn": { "type": ["string", "null"] },
+          "action": { "type": ["string", "null"] },
+          "account_type": { "type": ["string", "null"] },
+          "routing_number": { "type": ["string", "null"] },
+          "account_number": { "type": ["string", "null"] },
+          "deposit_type": { "type": ["string", "null"] },
+          "deposit_value_text": { "type": ["string", "null"] },
+          "struck_through": { "type": "boolean" },
+          "signed": { "type": ["boolean", "null"] },
+          "signature_date_text": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "signer": { "type": ["string", "null"] },
+          "role": { "type": ["string", "null"] },
+          "date_text": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "printed_text": { "type": "string", "description": "All printed text in reading order; tables as pipe-delimited rows." },
+    "handwritten_text": { "type": "string", "description": "Every handwritten mark with its location." },
+    "issues": { "type": "array", "items": { "type": "string" }, "description": "Legibility problems, ambiguous marks, anything the reviewer should know." }
+  }
+}

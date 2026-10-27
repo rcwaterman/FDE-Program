@@ -1,0 +1,60 @@
+# Synthetic payroll pipeline and review UI, one image, three roles.
+#
+#   export RUN_ID=tc3-synth-01
+#   docker compose --profile setup run --rm stage       # copy the synthetic timesheets into runs/$RUN_ID
+#   docker compose --profile run run --rm pipeline      # ingest + extract + CSV (needs ANTHROPIC_API_KEY in .env)
+#   docker compose up review                            # review UI at http://localhost:8501
+#
+# The synthetic images are mounted read-only. Runs live in the named volume "runs".
+
+x-image: &image
+  build:
+    context: .
+    dockerfile: Dockerfile.review
+  image: fde-review:local
+
+services:
+  stage:
+    <<: *image
+    profiles: ["setup"]
+    # The image's ENTRYPOINT is Streamlit, so these services must override it or they start a web server.
+    entrypoint: ["python", "-m", "src.synthetic.stage_synthetic"]
+    command: ["--run-id", "${RUN_ID:?set RUN_ID}", "--runs-dir", "/runs", "--source", "/data"]
+    volumes:
+      - ./use_case/data:/data:ro
+      - runs:/runs
+
+  pipeline:
+    <<: *image
+    profiles: ["run"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      RUN_ID: ${RUN_ID:?set RUN_ID}
+      # Synthetic timesheets only. The production default is false; see src/pipeline/README.md.
+      PIPELINE_ALLOW_PII_TO_LLM: "true"
+      PIPELINE_OUTPUT_FORMAT: csv
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        python -m src.pipeline.cli ingest --run-id "$$RUN_ID" --runs-dir /runs
+        --folder "/runs/$$RUN_ID/attachments" &&
+        python -m src.pipeline.cli run --run-id "$$RUN_ID" --runs-dir /runs
+        --output-format csv --allow-pii-to-llm --no-sf
+    volumes:
+      - runs:/runs
+
+  review:
+    <<: *image
+    ports:
+      # Localhost only. The review UI shows client documents; do not publish it on the network.
+      - "127.0.0.1:8501:8501"
+    environment:
+      REVIEWER_EMAIL: ${REVIEWER_EMAIL:-reviewer@example.com}
+    command: ["--source", "run", "--run-id", "${RUN_ID:?set RUN_ID}", "--runs-dir", "/runs"]
+    volumes:
+      - runs:/runs
+
+volumes:
+  runs:
