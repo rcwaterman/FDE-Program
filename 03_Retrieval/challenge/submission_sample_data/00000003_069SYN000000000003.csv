@@ -1,0 +1,12 @@
+﻿Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional)
+Pruitt,15,68.5,,,,,,,512.25,,,,,000042 BAR,,,,
+Brennan,7.25,72,,,,,,,,,,,,000030 SALES BUILDING,,,,
+LINDQVIST,22,78,2,,,,,,,,,,,000043 SERVERS,,,,
+Morrison,13.5,75,,,,,,,96.00,,,,,000043 SERVERS,,,,
+Bianchi,18.75,75,6,,,,,,287.00,,,,,000041 FRONT OF HOUSE,,,,
+RIVERA,28.75,84,,,,,,,,,,,,000030 SALES BUILDING,,,,
+Fitzgerald,10.5,76.5,1.5,,,,,,,,,,,000028 SALES LUMBER,,,,
+CALLOWAY,24.5,60,,,,,,,330.00,,,,,000042 BAR,,,,
+STRAND,10.5,84,,,,,,,,,,,,SALES LUMBER,,,,
+Teague,22,80,,,,,,,675.00,,,,,FRONT OF HOUSE,,,,
+Pruitt,15,72,,,,,,,54.50,,,,,SERVERS,,,,

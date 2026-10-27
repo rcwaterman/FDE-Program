@@ -1,0 +1,6 @@
+﻿Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional)
+YAMAMOTO,15.5,80,,,,,,,,,,,,000020 WAREHOUSE UNIO,,,,
+King,27.87,70,,,,,8,,,,,,,000025 DRIVERS,,,,
+DIAZ,28.42,80,5.5,,,,,,303.80,,,,,000043 SERVERS,,,,
+STEWART,5.15,54.75,,,,,,,373.93,,,,,000043 SERVERS,,,,
+Nowak,4.35,46.5,,,,,,,754.02,,,,,000042 BAR,,,,

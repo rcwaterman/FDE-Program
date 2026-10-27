@@ -1,0 +1,399 @@
+{
+ "schema_version": "1",
+ "template": "import_template_charter",
+ "columns": [
+  "Employee Last Name",
+  "Pay Rate(Optional)",
+  "Reg Hours",
+  "OT Hours",
+  "Vacation Hours",
+  "Sick Hours",
+  "Holiday Hours",
+  "PTO Hours",
+  "Other Hours",
+  "Cash Tips Amount",
+  "Credit Tips Amount",
+  "Bonus Amount",
+  "Commission Amount",
+  "Other Amount",
+  "Department (optional)",
+  "Deduction Code (Optional)",
+  "Deduction Amount (Optional)",
+  "Project (optional)",
+  "Job (optional)"
+ ],
+ "record_id": "00000004_069SYN000000000004",
+ "case_number": "00000004",
+ "review_status": "needs_review",
+ "review_reasons": [
+  "salesforce_not_checked",
+  "uncertain_payable_value",
+  "header_conflict",
+  "sf_not_checked"
+ ],
+ "document": {
+  "client": {
+   "name": "SUMMIT CREEK LUMBER CO",
+   "number": "18316119B"
+  },
+  "pay_period": {
+   "Pay Period Start": "09/01/2026",
+   "Pay Period End": "09/14/2026",
+   "Check Date": "09/19/2026",
+   "Pay Frequency": "B"
+  },
+  "doc_type": "coad_payroll_timesheet_report",
+  "page_count": 2
+ },
+ "rows": [
+  {
+   "row_id": "R001",
+   "row_kind": "earnings",
+   "employee_ref": "E001",
+   "employee_name": "SUSAN HENDERSON",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "41eca8c25bc12231",
+   "items": [
+    {
+     "item_id": "P0002",
+     "column": "Reg Hours",
+     "value": 78.0,
+     "page": 1,
+     "raw_text": "78",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Written replacement for struck 82 in Regular column"
+    },
+    {
+     "item_id": "P0003",
+     "column": "OT Hours",
+     "value": 10.0,
+     "page": 1,
+     "raw_text": "10",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "Handwritten in Overtime column"
+    },
+    {
+     "item_id": "P0004",
+     "column": "PTO Hours",
+     "value": 8.0,
+     "page": 1,
+     "raw_text": "8",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "other_pay",
+     "kind_basis": "legend",
+     "evidence": "Code 26 = PERSONAL per legend; written in code/Other hours columns"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R002",
+   "row_kind": "earnings",
+   "employee_ref": "E003",
+   "employee_name": "James Gutierrez",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "bbf380c876a507a1",
+   "items": [
+    {
+     "item_id": "P0005",
+     "column": "Reg Hours",
+     "value": 40.0,
+     "page": 1,
+     "raw_text": "40",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Handwritten in Regular column"
+    },
+    {
+     "item_id": "P0006",
+     "column": "PTO Hours",
+     "value": 8.0,
+     "page": 1,
+     "raw_text": "8",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "other_pay",
+     "kind_basis": "legend",
+     "evidence": "Code 26 = PERSONAL per legend; Other hours column"
+    },
+    {
+     "item_id": "P0007",
+     "column": "Cash Tips Amount",
+     "value": 142.5,
+     "page": 1,
+     "raw_text": "142.50",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Code 21 = Tips per legend; decimal amount"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R003",
+   "row_kind": "earnings",
+   "employee_ref": "E005",
+   "employee_name": "MARCUS E KIM",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "94530bd8aa6933e3",
+   "items": [
+    {
+     "item_id": "P0008",
+     "column": "Reg Hours",
+     "value": 70.25,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Handwritten in Regular column"
+    },
+    {
+     "item_id": "P0009",
+     "column": "Cash Tips Amount",
+     "value": 185.0,
+     "page": 1,
+     "raw_text": "185",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Code 21 = Tips per legend; amount in earnings column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R004",
+   "row_kind": "earnings",
+   "employee_ref": "E006",
+   "employee_name": "LUIS KIM",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "af21a75ab5e81c3f",
+   "items": [
+    {
+     "item_id": "P0010",
+     "column": "Reg Hours",
+     "value": 76.5,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R005",
+   "row_kind": "earnings",
+   "employee_ref": "E007",
+   "employee_name": "Michael Lindqvist",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "006a2edd10df7f89",
+   "items": [
+    {
+     "item_id": "P0011",
+     "column": "Reg Hours",
+     "value": 80.0,
+     "page": 2,
+     "raw_text": "80",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    },
+    {
+     "item_id": "P0012",
+     "column": "OT Hours",
+     "value": 1.5,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "handwritten in Overtime hours column"
+    },
+    {
+     "item_id": "P0013",
+     "column": "Cash Tips Amount",
+     "value": 410.75,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "code 21 = Tips per legend; decimals amount"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R006",
+   "row_kind": "earnings",
+   "employee_ref": "E008",
+   "employee_name": "MEGAN PRUITT",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "fd0d5adee14bc887",
+   "items": [
+    {
+     "item_id": "P0014",
+     "column": "Reg Hours",
+     "value": 76.5,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    },
+    {
+     "item_id": "P0015",
+     "column": "Cash Tips Amount",
+     "value": 96.0,
+     "page": 2,
+     "raw_text": "96",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "code 21 = Tips per legend; amount in earnings amount column"
+    },
+    {
+     "item_id": "P0016",
+     "column": "Deduction Amount (Optional)",
+     "value": 15.0,
+     "page": 2,
+     "raw_text": "15.00",
+     "confidence": "high",
+     "status": "printed_default",
+     "source": "printed"
+    }
+   ],
+   "total_pay": ""
+  }
+ ],
+ "unmapped_items": [],
+ "excluded_items": [
+  {
+   "item_id": "P0001",
+   "employee_ref": "E001",
+   "status": "struck_through",
+   "code": "1",
+   "amount": null
+  }
+ ],
+ "standing_deductions_omitted": 5,
+ "record_flags": [
+  {
+   "code": "HEADER_CONFLICT",
+   "severity": "warning"
+  },
+  {
+   "code": "HEADER_CONFLICT",
+   "severity": "warning"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "SF_NOT_CHECKED",
+   "severity": "warning"
+  }
+ ]
+}

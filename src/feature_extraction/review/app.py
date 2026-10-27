@@ -10,6 +10,7 @@ To review the output of a specific pipeline run instead (e.g. one produced by
 must exist).
 """
 import argparse
+import logging
 import os
 import sys
 from datetime import datetime
@@ -46,6 +47,11 @@ from src.feature_extraction.review.review_model import (
     group_pay_items_by_employee,
     bulk_accept,
 )
+
+
+from src.logsetup import configure as configure_logging
+
+log = logging.getLogger(__name__)
 
 
 def _parse_source_args():
@@ -91,6 +97,8 @@ if _source_args.source == "run":
     # (src/data/attachments) doesn't contain them. Cache per run so renders can't collide.
     ATTACHMENTS_DIR = str(RUN_ROOT / "attachments")
     CACHE_DIR = str(RUN_ROOT / ".cache")
+    configure_logging(RUN_ROOT, "review")
+    log.info("review start: run=%s source=%s", _source_args.run_id, _source_args.source)
     # CSV-format runs get their own review engine. It returns early, so the JSON engine below never runs.
     if select_engine(RUN_ROOT, _source_args.engine) == "csv":
         run_csv_review(RUN_ROOT, ATTACHMENTS_DIR, CACHE_DIR, DATA_SOURCE_LABEL)
@@ -152,6 +160,7 @@ def render_page_image(record, page_num, rotation=0):
         )
         st.image(img_path, use_container_width=True, caption=f"Page {page_num}")
     except Exception as e:
+        log.exception("page image failed record=%s page=%s", record.get("record_id"), page_num)
         st.error(f"Failed to load page image: {e}")
 
 

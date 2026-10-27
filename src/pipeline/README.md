@@ -18,7 +18,7 @@ review app. Docker is the supported route, because the image holds code only and
 export RUN_ID=tc3-synth-01
 docker compose --profile setup run --rm stage        # copy the timesheets into runs/$RUN_ID under pipeline-safe names
 docker compose --profile run run --rm pipeline       # ingest, extract with Claude, write the 19-column CSV
-docker compose up review                             # review UI at http://localhost:8501 (localhost only)
+RUN_ID=$RUN_ID docker compose up review              # review UI at http://localhost:8501 (localhost only)
 ```
 
 The `pipeline` service sets `PIPELINE_ALLOW_PII_TO_LLM=true`. That is for synthetic data only. The default stays `false`
@@ -91,9 +91,51 @@ Tests: `python -m pytest tests/pipeline tests/synthetic -q`
 | `stages/` | ingest, sf_snapshot, preprocess, classify, extract, assemble, normalize, reconcile, sf_verify, amendments, validate, export |
 | `exporters/` | Review workbook, Default Earning by Column draft |
 
-## Run folder
+## Run folder and outputs
 
-`runs/<run_id>/` holds `manifest.jsonl`, `sf/<case>.json`, `records/<record_id>/` (one JSON per stage, page images and page readings, `state.json`, `llm_calls.jsonl`), `payroll_extractions.jsonl`, the workbook, `exports/`, and `run_summary.json`. `runs/` is git-ignored because it contains PII.
+Everything for a run is under `runs/<run_id>/`. In Docker that folder is `./runs` (or `$RUNS_DIR`) on the host, so you can
+open it while the containers run and after they exit. `runs/` is git-ignored because it contains client data.
+
+| Path | Written by | When |
+|---|---|---|
+| `attachments/` | the `stage` service (synthetic) or `ingest` | before the run |
+| `records/<id>/import_template.csv` (+ `.meta.json`, `record.json`, per-stage JSON, `state.json`, `llm_calls.jsonl`) | the `import_csv` stage | as each record finishes |
+| `import_csv/<id>.csv`, `<id>.meta.json`, `_manifest.json` | `export` | when the run ends, or when an interrupted run is exported |
+| `payroll_extractions.jsonl`, `run_summary.json`, `exports/`, `Payroll_Attachment_Extractions.xlsx` | `export` | same |
+| `logs/pipeline.log` | the CLI | every run, rotated at 10 MB |
+| `logs/api_calls.jsonl` | every Anthropic HTTP attempt | every run (see below) |
+| `logs/api_summary.json` | `diagnose` | when you run it |
+| `csv_review/<id>.json` | the review app | each reviewer decision |
+| `import_csv_reviewed/<id>.csv` | the review app | complete cases only |
+
+The CSV engine reads `import_csv/`, so a run shows in the review app only after `export` has written it. An interrupted
+run (Ctrl-C, or `docker stop`) still exports the records that finished.
+
+## Logs and debugging Claude API errors
+
+Two logs answer different questions:
+
+- **`logs/api_calls.jsonl`**: one line per HTTP attempt, including the SDK's own retries. Each line has the record,
+  stage and page, the status, the `request-id` Anthropic support asks for, the rate-limit headers, and for errors the
+  response body (truncated to 2,000 characters). The request is summarised, not copied: model, `tool_choice`, number of
+  images and their base64 size, and tool names. Image data and prompt text are never written.
+- **`logs/pipeline.log`**: the readable run log, including the `WARNING` when a model refuses a forced `tool_choice`.
+
+```bash
+# In Docker, with the run folder bind-mounted:
+docker compose --profile run run -T --rm --entrypoint python pipeline -m src.pipeline.cli diagnose --run-id $RUN_ID --runs-dir /runs
+# Locally:
+python -m src.pipeline.cli diagnose --run-id <run_id>
+```
+
+`diagnose` prints totals by status, the error groups (count, message, example `request-id`s and records), retried
+calls, the `tool_choice` fallbacks, latency p50 and p95, and the prompt-cache hit ratio. It also writes
+`logs/api_summary.json`.
+
+`PIPELINE_TOOL_CHOICE` controls how the forced tool call is sent. `try` (the default) forces it, and if a model refuses
+that it uses `auto` for the model from then on, which avoids a wasted request on every page. `tool` never falls back,
+and `auto` never forces. `PIPELINE_LOG_LEVEL` sets the level for `src.*` loggers. The `anthropic` and `httpx` loggers stay
+at INFO even with `-v`, because at DEBUG the SDK logs whole request bodies, which include page images.
 
 ## Safety switches
 

@@ -1,10 +1,13 @@
 """Load/save records with atomic writes and JSONL synchronization."""
 import hashlib
 import json
+import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+
+log = logging.getLogger(__name__)
 
 
 def _fingerprint_records_dir(records_dir: str) -> str:
@@ -50,6 +53,8 @@ def save_decision(
     field_decision should have: item_id, decision, corrected_value, note.
     decided_by/decided_at will be filled in here.
     """
+    log.info("review decision record=%s item=%s decision=%s reviewer=%s", record_id,
+             field_decision.get("item_id"), field_decision.get("decision"), reviewer_email)
     record_path = Path(records_dir) / f"{record_id}.json"
 
     # Read fresh from disk to avoid clobbering concurrent edits
@@ -113,6 +118,7 @@ def save_decision_batch(
     reviewer_email: str,
 ) -> None:
     """Save multiple field decisions to a record file in one batch."""
+    log.info("review batch record=%s reviewer=%s decisions=%d", record_id, reviewer_email, len(field_decisions))
     record_path = Path(records_dir) / f"{record_id}.json"
 
     # Read fresh from disk

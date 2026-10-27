@@ -1,0 +1,205 @@
+{
+ "schema_version": "1",
+ "template": "import_template_charter",
+ "columns": [
+  "Employee Last Name",
+  "Pay Rate(Optional)",
+  "Reg Hours",
+  "OT Hours",
+  "Vacation Hours",
+  "Sick Hours",
+  "Holiday Hours",
+  "PTO Hours",
+  "Other Hours",
+  "Cash Tips Amount",
+  "Credit Tips Amount",
+  "Bonus Amount",
+  "Commission Amount",
+  "Other Amount",
+  "Department (optional)",
+  "Deduction Code (Optional)",
+  "Deduction Amount (Optional)",
+  "Project (optional)",
+  "Job (optional)"
+ ],
+ "record_id": "00000008_069SYN000000000008",
+ "case_number": "00000008",
+ "review_status": "needs_review",
+ "review_reasons": [
+  "salesforce_not_checked",
+  "uncertain_payable_value",
+  "unresolved_pay_item",
+  "sf_not_checked"
+ ],
+ "document": {
+  "client": {
+   "name": "LAKESIDE BISTRO",
+   "number": "93232653B"
+  },
+  "pay_period": {
+   "Pay Period Start": "10/10/2026",
+   "Pay Period End": "10/23/2026",
+   "Check Date": "10/30/2026",
+   "Pay Frequency": "B"
+  },
+  "doc_type": "coad_payroll_timesheet_report",
+  "page_count": 1
+ },
+ "rows": [
+  {
+   "row_id": "R001",
+   "row_kind": "earnings",
+   "employee_ref": "E001",
+   "employee_name": "Melissa Myers",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "b98b0bfe05175417",
+   "items": [
+    {
+     "item_id": "P0001",
+     "column": "Reg Hours",
+     "value": 46.75,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    },
+    {
+     "item_id": "P0002",
+     "column": "Bonus Amount",
+     "value": 218.09,
+     "page": 1,
+     "raw_text": "$218.09",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "bonus",
+     "kind_basis": "legend",
+     "evidence": "code 19 = BONUS per legend; $ amount"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R002",
+   "row_kind": "earnings",
+   "employee_ref": "E002",
+   "employee_name": "Betty Rivera",
+   "source_pages": [],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "UNPLACED P0003: code 1 'REGULAR' = no value (non-earning item)"
+   ],
+   "fingerprint": "04053efd03591eb9",
+   "items": [],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R003",
+   "row_kind": "earnings",
+   "employee_ref": "E003",
+   "employee_name": "Melissa Cruz",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "d4c89e1edc7c7187",
+   "items": [
+    {
+     "item_id": "P0005",
+     "column": "Reg Hours",
+     "value": 80.0,
+     "page": 1,
+     "raw_text": "80",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    },
+    {
+     "item_id": "P0006",
+     "column": "OT Hours",
+     "value": 5.0,
+     "page": 1,
+     "raw_text": "5",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "handwritten in Overtime hours column"
+    }
+   ],
+   "total_pay": ""
+  }
+ ],
+ "unmapped_items": [
+  {
+   "item_id": "P0003",
+   "employee_ref": "E002",
+   "item_type": "other",
+   "code": "1",
+   "legend": "REGULAR",
+   "label": "REGULAR",
+   "amount": null,
+   "quantity": null,
+   "reason": "non-earning item"
+  }
+ ],
+ "excluded_items": [
+  {
+   "item_id": "P0004",
+   "employee_ref": "E002",
+   "status": "struck_through",
+   "code": "21",
+   "amount": null
+  }
+ ],
+ "standing_deductions_omitted": 3,
+ "record_flags": [
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "SF_NOT_CHECKED",
+   "severity": "warning"
+  }
+ ]
+}

@@ -17,8 +17,12 @@ RUN uv export --frozen --no-dev --no-emit-project --no-hashes --group review-app
     && rm requirements.txt
 
 COPY src/ /app/src/
+# COPY keeps the host's file modes. A file that is 0600 on the host (it happened to workbook.py) is unreadable to the
+# non-root user below, and the import fails in the middle of export. Make the code world-readable whatever the umask was.
+RUN chmod -R a+rX /app/src
 
-# Non-root user. /runs is where runs are written; the named volume inherits this ownership.
+# Non-root user. /runs is the bind-mounted run folder (./runs on the host), so the user must be able to write to it;
+# on Linux that means the host folder is owned by uid 1000 (see src/pipeline/README.md).
 RUN useradd --create-home app \
     && mkdir -p /runs \
     && chown app /runs

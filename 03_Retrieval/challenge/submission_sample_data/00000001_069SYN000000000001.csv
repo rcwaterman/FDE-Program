@@ -1,0 +1,10 @@
+﻿Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional)
+HOLLOWAY,24.5,80,8,,,,,,228.40,,,,,000042 BAR,,,,
+Sinclair,10.5,72,,,,,,,,,,,,000023 OFFICE,,,,
+BOATENG,18.75,76.5,,,,,,,142.50,,,,,000040 KITCHEN,,,,
+FARRELL,22,80,,,,,,,,,,,,000025 DRIVERS,,,,
+Okonkwo,10.5,84,,,,,,,330.00,,,,,000043 SERVERS,,,,
+HOFFMAN,7.25,80,,,,,,,,,,,,000020 WAREHOUSE UNIO,,,,
+Okafor,,76.5,,,,,,,,,,,,000028 SALES LUMBER,,,,
+SANTORO,28.75,76.5,1.5,,,,,,96.00,,,,,000042 BAR,,,,
+Farrell,13.5,80,,,,,,,142.50,,,,,000043 SERVERS,,,,

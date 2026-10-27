@@ -34,6 +34,11 @@ class PipelineConfig:
     extract_max_tokens: int = int(os.getenv("PIPELINE_EXTRACT_MAX_TOKENS", 16000))
     schema_retries: int = int(os.getenv("PIPELINE_SCHEMA_RETRIES", 2))
     api_max_retries: int = int(os.getenv("PIPELINE_API_MAX_RETRIES", 4))
+    # How a forced tool call is sent: "try" forces it and falls back to "auto" for a model that refuses it
+    # (remembered for the run); "tool" always forces; "auto" never forces. See llm/client.py.
+    tool_choice: str = os.getenv("PIPELINE_TOOL_CHOICE", "try")
+    # Level for src.* loggers. The anthropic and httpx loggers stay at INFO whatever this is set to.
+    log_level: str = os.getenv("PIPELINE_LOG_LEVEL", "INFO")
 
     allow_pii_to_llm: bool = _bool("PIPELINE_ALLOW_PII_TO_LLM", False)
     # Vision classify for documents with no usable text layer (scanned/flattened PDFs, raster

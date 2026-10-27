@@ -1,0 +1,256 @@
+{
+ "schema_version": "1",
+ "template": "import_template_charter",
+ "columns": [
+  "Employee Last Name",
+  "Pay Rate(Optional)",
+  "Reg Hours",
+  "OT Hours",
+  "Vacation Hours",
+  "Sick Hours",
+  "Holiday Hours",
+  "PTO Hours",
+  "Other Hours",
+  "Cash Tips Amount",
+  "Credit Tips Amount",
+  "Bonus Amount",
+  "Commission Amount",
+  "Other Amount",
+  "Department (optional)",
+  "Deduction Code (Optional)",
+  "Deduction Amount (Optional)",
+  "Project (optional)",
+  "Job (optional)"
+ ],
+ "record_id": "00000009_069SYN000000000009",
+ "case_number": "00000009",
+ "review_status": "needs_review",
+ "review_reasons": [
+  "salesforce_not_checked",
+  "uncertain_payable_value",
+  "unresolved_pay_item",
+  "sf_not_checked"
+ ],
+ "document": {
+  "client": {
+   "name": "HARBORVIEW CAFE & GRILL",
+   "number": "15455200D"
+  },
+  "pay_period": {
+   "Pay Period Start": "04/08/2026",
+   "Pay Period End": "04/21/2026",
+   "Check Date": "04/24/2026",
+   "Pay Frequency": "B"
+  },
+  "doc_type": "coad_payroll_timesheet_report",
+  "page_count": 1
+ },
+ "rows": [
+  {
+   "row_id": "R001",
+   "row_kind": "earnings",
+   "employee_ref": "E001",
+   "employee_name": "Rahul Young",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "KIND_INFERRED",
+    "RATE_FROM_ATTRIBUTES",
+    "UNPLACED P0002: code 24 'HOLIDAY' = $152.00 (no hours value)"
+   ],
+   "fingerprint": "cb47ea239e7580d4",
+   "items": [
+    {
+     "item_id": "P0001",
+     "column": "Reg Hours",
+     "value": 80.0,
+     "page": 1,
+     "raw_text": "80",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "written in Regular hours column on Young's row"
+    },
+    {
+     "item_id": "P0003",
+     "column": "Other Amount",
+     "value": 70.13,
+     "page": 1,
+     "raw_text": "$70.13",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "other_pay",
+     "kind_basis": "sign",
+     "evidence": "second earnings pair, code 48 not in legible legend portion"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R002",
+   "row_kind": "earnings",
+   "employee_ref": "E002",
+   "employee_name": "Carol Reed",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "ae95672e7da72349",
+   "items": [
+    {
+     "item_id": "P0004",
+     "column": "Reg Hours",
+     "value": 74.75,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "written in hours column on Reed's row; outlined/grey pen"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R003",
+   "row_kind": "earnings",
+   "employee_ref": "E003",
+   "employee_name": "Ivan Chavez",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "UNPLACED P0005: code 1 'REGULAR' = no value (non-earning item)"
+   ],
+   "fingerprint": "4e41e710c06545db",
+   "items": [
+    {
+     "item_id": "P0007",
+     "column": "Bonus Amount",
+     "value": 43.0,
+     "page": 1,
+     "raw_text": "$43.00",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "bonus",
+     "kind_basis": "legend",
+     "evidence": "code 19 = BONUS; replacement for struck $46.00"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R004",
+   "row_kind": "earnings",
+   "employee_ref": "E004",
+   "employee_name": "Carol Rivera",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "2862c9d3ef6aa09e",
+   "items": [
+    {
+     "item_id": "P0008",
+     "column": "Reg Hours",
+     "value": 48.5,
+     "page": 1,
+     "raw_text": "48.50",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "blue ink in Regular hours column on Rivera's row"
+    },
+    {
+     "item_id": "P0009",
+     "column": "Cash Tips Amount",
+     "value": 19.0,
+     "page": 1,
+     "raw_text": "$19",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "blue '21 $19'; code 21 = Tips"
+    }
+   ],
+   "total_pay": ""
+  }
+ ],
+ "unmapped_items": [
+  {
+   "item_id": "P0002",
+   "employee_ref": "E001",
+   "item_type": "earning",
+   "code": "24",
+   "legend": "HOLIDAY",
+   "label": "HOLIDAY",
+   "amount": 152.0,
+   "quantity": null,
+   "reason": "no hours value"
+  },
+  {
+   "item_id": "P0005",
+   "employee_ref": "E003",
+   "item_type": "other",
+   "code": "1",
+   "legend": "REGULAR",
+   "label": "REGULAR",
+   "amount": null,
+   "quantity": null,
+   "reason": "non-earning item"
+  }
+ ],
+ "excluded_items": [
+  {
+   "item_id": "P0006",
+   "employee_ref": "E003",
+   "status": "struck_through",
+   "code": "19",
+   "amount": 46.0
+  }
+ ],
+ "standing_deductions_omitted": 0,
+ "record_flags": [
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "SF_NOT_CHECKED",
+   "severity": "warning"
+  }
+ ]
+}

@@ -9,6 +9,7 @@ Called from review/app.py when select_engine() picks "csv". This module does not
 from __future__ import annotations
 
 import json
+import logging
 import os
 from pathlib import Path
 
@@ -18,6 +19,8 @@ import streamlit as st
 from src.feature_extraction.review.doc_render import get_page_image
 from src.feature_extraction.review.csv_engine import csv_export, csv_model, csv_store
 from src.feature_extraction.review.csv_engine.flag_text import explain
+
+log = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[4]
 IMPORT_MAP_PATH = _REPO_ROOT / "src" / "pipeline" / "schemas" / "import_column_map.json"
@@ -160,6 +163,7 @@ def _render_document(run_root: Path, record_id: str, meta: dict, attachments_dir
         img = get_page_image(record_id, page, attachments_dir, cache_dir, rotation=rot)
         st.image(img, use_container_width=True)
     except Exception as e:  # missing or unreadable attachment: say why, keep the table usable
+        log.exception("document render failed record=%s page=%s", record_id, page)
         st.error(f"Could not load the document: {e}")
 
     text = _page_text(run_root, record_id, page)
@@ -343,7 +347,15 @@ def run_csv_review(run_root: Path, attachments_dir: str, cache_dir: str, source_
     _init_state()
     entries = csv_store.load_manifest(run_root)
     if not entries:
-        st.error("This run has no import CSVs. Re-run with `--output-format csv`, then review it here.")
+        built = list((run_root / "records").glob("*/import_template.csv")) if (run_root / "records").exists() else []
+        marker = run_root / "output_format.json"
+        csv_run = marker.exists() and json.loads(marker.read_text(encoding="utf-8")).get("output_format") == "csv"
+        log.info("csv review: no manifest yet, run=%s built=%d csv_run=%s", run_root.name, len(built), csv_run)
+        if built or csv_run:
+            st.warning(f"This run has not been exported yet: {len(built)} case(s) are finished, but import_csv/ is written "
+                       f"when the run ends. Wait for the pipeline to finish, or run `export --run-id {run_root.name}`.")
+        else:
+            st.error("This run has no import CSVs. Re-run with `--output-format csv`, then review it here.")
         return
 
     cmap = _load_cmap()

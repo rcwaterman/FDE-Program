@@ -1,0 +1,176 @@
+{
+ "schema_version": "1",
+ "template": "import_template_charter",
+ "columns": [
+  "Employee Last Name",
+  "Pay Rate(Optional)",
+  "Reg Hours",
+  "OT Hours",
+  "Vacation Hours",
+  "Sick Hours",
+  "Holiday Hours",
+  "PTO Hours",
+  "Other Hours",
+  "Cash Tips Amount",
+  "Credit Tips Amount",
+  "Bonus Amount",
+  "Commission Amount",
+  "Other Amount",
+  "Department (optional)",
+  "Deduction Code (Optional)",
+  "Deduction Amount (Optional)",
+  "Project (optional)",
+  "Job (optional)"
+ ],
+ "record_id": "00000007_069SYN000000000007",
+ "case_number": "00000007",
+ "review_status": "needs_review",
+ "review_reasons": [
+  "salesforce_not_checked",
+  "uncertain_payable_value",
+  "sf_not_checked"
+ ],
+ "document": {
+  "client": {
+   "name": "GREENFIELD LANDSCAPE CO",
+   "number": "4215351D"
+  },
+  "pay_period": {
+   "Pay Period Start": "02/26/2026",
+   "Pay Period End": "03/11/2026",
+   "Check Date": "03/15/2026",
+   "Pay Frequency": "B"
+  },
+  "doc_type": "coad_payroll_timesheet_report",
+  "page_count": 1
+ },
+ "rows": [
+  {
+   "row_id": "R001",
+   "row_kind": "earnings",
+   "employee_ref": "E001",
+   "employee_name": "Priya Nowak",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "NO_EMPLOYEE_NUMBER",
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "a857bc64deeaeba1",
+   "items": [
+    {
+     "item_id": "P0001",
+     "column": "Reg Hours",
+     "value": 80.0,
+     "page": 1,
+     "raw_text": "80",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten 80 in Regular column"
+    },
+    {
+     "item_id": "P0002",
+     "column": "OT Hours",
+     "value": 6.5,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "handwritten 6.5 in Overtime column"
+    },
+    {
+     "item_id": "P0003",
+     "column": "Bonus Amount",
+     "value": 74.26,
+     "page": 1,
+     "raw_text": "$74.26",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "bonus",
+     "kind_basis": "legend",
+     "evidence": "code 19 beside amount; legend 19 = BONUS"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R002",
+   "row_kind": "earnings",
+   "employee_ref": "E002",
+   "employee_name": "Juan Brooks",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "NO_EMPLOYEE_NUMBER",
+    "RATE_FROM_ATTRIBUTES",
+    "UNPLACED P0005: code 28 'OTHER' = 2 hours (no amount)"
+   ],
+   "fingerprint": "df231435893f2b5a",
+   "items": [
+    {
+     "item_id": "P0004",
+     "column": "Reg Hours",
+     "value": 80.0,
+     "page": 1,
+     "raw_text": "80",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten 80 in Regular column, appears overwritten"
+    }
+   ],
+   "total_pay": ""
+  }
+ ],
+ "unmapped_items": [
+  {
+   "item_id": "P0005",
+   "employee_ref": "E002",
+   "item_type": "earning",
+   "code": "28",
+   "legend": "OTHER",
+   "label": "OTHER",
+   "amount": null,
+   "quantity": {
+    "value": 2.0,
+    "unit": "hours"
+   },
+   "reason": "no amount"
+  }
+ ],
+ "excluded_items": [],
+ "standing_deductions_omitted": 3,
+ "record_flags": [
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "SF_NOT_CHECKED",
+   "severity": "warning"
+  }
+ ]
+}

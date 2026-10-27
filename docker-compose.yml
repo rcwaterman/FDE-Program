@@ -1,17 +1,24 @@
 # Synthetic payroll pipeline and review UI, one image, three roles.
 #
 #   export RUN_ID=tc3-synth-01
-#   docker compose --profile setup run --rm stage       # copy the synthetic timesheets into runs/$RUN_ID
-#   docker compose --profile run run --rm pipeline      # ingest + extract + CSV (needs ANTHROPIC_API_KEY in .env)
-#   docker compose up review                            # review UI at http://localhost:8501
+#   docker compose --profile setup run -T --rm stage      # copy the synthetic timesheets into runs/$RUN_ID
+#   docker compose --profile run run -T --rm pipeline     # ingest + extract + CSV (needs ANTHROPIC_API_KEY in .env)
+#   RUN_ID=$RUN_ID docker compose up review               # review UI at http://localhost:8501
 #
-# The synthetic images are mounted read-only. Runs live in the named volume "runs".
+# Runs are written to ./runs (or $RUNS_DIR) on the host, so the CSVs and logs are in the repo folder while the
+# containers run and after they exit. Each run has logs/pipeline.log and logs/api_calls.jsonl. See
+# src/pipeline/README.md for what each file holds.
 
 x-image: &image
   build:
     context: .
     dockerfile: Dockerfile.review
   image: fde-review:local
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
 
 services:
   stage:
@@ -22,7 +29,7 @@ services:
     command: ["--run-id", "${RUN_ID:?set RUN_ID}", "--runs-dir", "/runs", "--source", "/data"]
     volumes:
       - ./use_case/data:/data:ro
-      - runs:/runs
+      - ${RUNS_DIR:-./runs}:/runs
 
   pipeline:
     <<: *image
@@ -32,6 +39,8 @@ services:
         required: false
     environment:
       RUN_ID: ${RUN_ID:?set RUN_ID}
+      # Printed at the end of a run so the user knows where the outputs are on the host.
+      HOST_RUNS_DIR: ${RUNS_DIR:-./runs}
       # Synthetic timesheets only. The production default is false; see src/pipeline/README.md.
       PIPELINE_ALLOW_PII_TO_LLM: "true"
       PIPELINE_OUTPUT_FORMAT: csv
@@ -43,7 +52,7 @@ services:
         python -m src.pipeline.cli run --run-id "$$RUN_ID" --runs-dir /runs
         --output-format csv --allow-pii-to-llm --no-sf
     volumes:
-      - runs:/runs
+      - ${RUNS_DIR:-./runs}:/runs
 
   review:
     <<: *image
@@ -54,7 +63,4 @@ services:
       REVIEWER_EMAIL: ${REVIEWER_EMAIL:-reviewer@example.com}
     command: ["--source", "run", "--run-id", "${RUN_ID:?set RUN_ID}", "--runs-dir", "/runs"]
     volumes:
-      - runs:/runs
-
-volumes:
-  runs:
+      - ${RUNS_DIR:-./runs}:/runs

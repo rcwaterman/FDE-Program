@@ -6,6 +6,7 @@ import shutil
 from collections import Counter
 
 from ..exporters.import_template import TEMPLATE
+from .. import apilog
 from ..store import read_json, write_jsonl, write_json, read_jsonl, now
 from .base import Context
 
@@ -90,5 +91,8 @@ def summarize(ctx: Context, recs: list[dict], import_csv: dict | None = None) ->
     }
     if import_csv is not None:
         s["import_csv"] = import_csv
+    api_events = read_jsonl(ctx.run.root / "logs" / "api_calls.jsonl")
+    if api_events:
+        s["api"] = apilog.summarize(api_events)
     write_json(ctx.run.root / "run_summary.json", s)
     return s

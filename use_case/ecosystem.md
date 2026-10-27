@@ -65,6 +65,10 @@ Yes, with the caveat that I will be running the model locally.
 ## Week 2
 A local model is not ideal for this application given the findings from this week. We will be shifting over to Sonnet 5.5 with a dedicated api endpoint for this project. 
 ---
+## Week 3
+Nothing would have to be modified about the model or endpoint. The only thing that might change is that it would be deployed via openshift or helm instead of docker, but the foundational architecture would remain the same.
+
+---
 ## Week 9 — the full checklist
 
 <!--

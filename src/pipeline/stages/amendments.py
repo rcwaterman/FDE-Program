@@ -145,7 +145,8 @@ def run(ctx: Context, rec, entry: dict) -> None:
     schema = json.loads(ctx.cfg.amend_schema_path.read_text())
     res = ctx.llm.call_tool(model=ctx.cfg.amend_model, system=AMEND_SYSTEM, content=[text_block(prompt)],
                             tool_name="record_amendments", tool_description="Record pay-affecting instructions from the email thread.",
-                            input_schema=schema, max_tokens=4000)
+                            input_schema=schema, max_tokens=4000,
+                            trace={"record_id": r["record_id"], "stage": "amendments"})
     rec.log_llm({"stage": "amendments", "model": res.model, "usage": res.usage, "latency_s": res.latency_s, "at": now()})
     errs = list(Draft202012Validator(schema).iter_errors(res.data))
     raw = {"prompt_version": PROMPT_VERSION, "model": res.model, "valid": not errs, "at": now(), **res.data}

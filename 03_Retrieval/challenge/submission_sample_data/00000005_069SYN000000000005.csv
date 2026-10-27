@@ -1,0 +1,13 @@
+﻿Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional)
+Nguyen,,,,,,,,,228.40,,,,,000031 YARD CREW,,,,
+Holloway,22,60,8,,,,,,,,,,,000030 SALES BUILDING,,,,
+Rivera,28.75,68.5,,,,,,,,,,,,000031 YARD CREW,,,,
+Holloway,10.5,70.25,,,,,,,410.75,,,,,000040 KITCHEN,,,,
+Brennan,15,60,,,,,,,,,,,,000025 DRIVERS,,,,
+Okonkwo,28.75,80,,,,,,,,,,,,000043 SERVERS,,,,
+Whitaker,13.5,60,1.5,,,,,,,,,,,000028 SALES LUMBER,,,,
+Gutierrez,16.25,76.5,4.5,,,,,,,,,,,000025 DRIVERS,,,,
+Abernathy,28.75,75,,,,,,,,,,,,000030 SALES BUILDING,,,,
+PRUITT,7.25,72,,,,,,,,,,,,000030 SALES BUILDING,,,,
+Tran,16.25,70.25,,,,,,,,,,,,000028 SALES LUMBER,,,,
+MORRISON,13.5,72,,,,,,,228.40,,,,,000043 SERVERS,,,,

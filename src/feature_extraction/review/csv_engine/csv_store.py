@@ -7,10 +7,12 @@ engine never sees them.
 import csv
 import io
 import json
+import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+log = logging.getLogger(__name__)
 SCHEMA_VERSION = "1"
 DECISIONS = ("accept", "reject", "edit")
 
@@ -65,6 +67,7 @@ def save_row_decision(run_root: Path, record_id: str, row_id: str, fingerprint: 
                                        "cell_edits": cell_edits or {}, "note": note,
                                        "decided_by": reviewer, "decided_at": _now()}
     _write_json(_review_path(run_root, record_id), review)
+    log.info("csv decision record=%s row=%s decision=%s reviewer=%s", record_id, row_id, decision, reviewer)
 
 
 def undo_row_decision(run_root: Path, record_id: str, row_id: str) -> None:
@@ -82,6 +85,7 @@ def save_unmapped_resolution(run_root: Path, record_id: str, item_id: str, actio
     review["unmapped_resolutions"][item_id] = {"action": action, "column": column, "value": value,
                                                "decided_by": reviewer, "decided_at": _now()}
     _write_json(_review_path(run_root, record_id), review)
+    log.info("csv resolution record=%s item=%s action=%s reviewer=%s", record_id, item_id, action, reviewer)
 
 
 def save_row_decisions_batch(run_root: Path, record_id: str, ops: list[tuple], reviewer: str) -> None:
@@ -89,6 +93,8 @@ def save_row_decisions_batch(run_root: Path, record_id: str, ops: list[tuple], r
     csv_model.apply_editor_changes, where op is accept | reject | edit | undo | blocked."""
     review = load_review(run_root, record_id)
     review["reviewed_by"] = reviewer
+    log.info("csv review record=%s reviewer=%s ops=%d kinds=%s", record_id, reviewer, len(ops),
+             sorted({op for op, _, _ in ops}))
     for op, row_id, payload in ops:
         if op == "blocked":
             continue  # refused by the model (for example, an edit on an excluded row); nothing to store

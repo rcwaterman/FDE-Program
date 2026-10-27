@@ -96,7 +96,8 @@ def _extract_page(ctx: Context, rec, entry, pre, page_no: int, doc_type: str, sc
             "Your previous record_page call failed schema validation:\n" + "\n".join(friendly_errors[:20]) + "\nCall record_page again with a corrected object.")]
         res = ctx.llm.call_tool(model=ctx.cfg.extract_model, system=spec["system"], content=msg, tool_name="record_page",
                                 tool_description="Record everything on this page.", input_schema=schema,
-                                max_tokens=ctx.cfg.extract_max_tokens)
+                                max_tokens=ctx.cfg.extract_max_tokens,
+                                trace={"record_id": rec.record_id, "stage": "extract", "page": page_no, "attempt": attempt})
         rec.log_llm({"stage": "extract", "page": page_no, "attempt": attempt, "model": res.model, "usage": res.usage,
                      "stop_reason": res.stop_reason, "latency_s": res.latency_s, "at": now()})
         data = res.data
@@ -142,4 +143,5 @@ def _safe(ctx, rec, entry, pre, n, doc_type, schema, v, spec):
         return _extract_page(ctx, rec, entry, pre, n, doc_type, schema, v, spec)
     except Exception as e:  # API error after SDK retries
         log.exception("extract %s p%d", rec.record_id, n)
-        return {"page": n, "status": "error", "error": f"{type(e).__name__}: {e}"[:300]}
+        return {"page": n, "status": "error", "error": f"{type(e).__name__}: {e}"[:2000],
+                "request_id": getattr(e, "request_id", None)}

@@ -1,0 +1,530 @@
+{
+ "schema_version": "1",
+ "template": "import_template_charter",
+ "columns": [
+  "Employee Last Name",
+  "Pay Rate(Optional)",
+  "Reg Hours",
+  "OT Hours",
+  "Vacation Hours",
+  "Sick Hours",
+  "Holiday Hours",
+  "PTO Hours",
+  "Other Hours",
+  "Cash Tips Amount",
+  "Credit Tips Amount",
+  "Bonus Amount",
+  "Commission Amount",
+  "Other Amount",
+  "Department (optional)",
+  "Deduction Code (Optional)",
+  "Deduction Amount (Optional)",
+  "Project (optional)",
+  "Job (optional)"
+ ],
+ "record_id": "00000005_069SYN000000000005",
+ "case_number": "00000005",
+ "review_status": "needs_review",
+ "review_reasons": [
+  "salesforce_not_checked",
+  "uncertain_payable_value",
+  "header_conflict",
+  "sf_not_checked"
+ ],
+ "document": {
+  "client": {
+   "name": "ALDER & STONE CONTRACTORS",
+   "number": "24740999B"
+  },
+  "pay_period": {
+   "Pay Period Start": "03/15/2026",
+   "Pay Period End": "03/28/2026",
+   "Check Date": "03/31/2026",
+   "Pay Frequency": "B"
+  },
+  "doc_type": "coad_payroll_timesheet_report",
+  "page_count": 3
+ },
+ "rows": [
+  {
+   "row_id": "R001",
+   "row_kind": "earnings",
+   "employee_ref": "E001",
+   "employee_name": "Hannah Nguyen",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "a79d181f145cda9d",
+   "items": [
+    {
+     "item_id": "P0001",
+     "column": "Cash Tips Amount",
+     "value": 228.4,
+     "page": 1,
+     "raw_text": "228.40",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Code 21 = Tips in legend; decimal amount"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R002",
+   "row_kind": "earnings",
+   "employee_ref": "E002",
+   "employee_name": "Patricia Holloway",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "095660841c06d045",
+   "items": [
+    {
+     "item_id": "P0002",
+     "column": "Reg Hours",
+     "value": 60.0,
+     "page": 1,
+     "raw_text": "60",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Written in Regular column; hourly employee"
+    },
+    {
+     "item_id": "P0003",
+     "column": "OT Hours",
+     "value": 8.0,
+     "page": 1,
+     "raw_text": "8",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "Written in Overtime column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R003",
+   "row_kind": "earnings",
+   "employee_ref": "E004",
+   "employee_name": "Linda Rivera",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "c59925acd17600cf",
+   "items": [
+    {
+     "item_id": "P0004",
+     "column": "Reg Hours",
+     "value": 68.5,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Written in Regular column; hourly rate 28.75"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R004",
+   "row_kind": "earnings",
+   "employee_ref": "E005",
+   "employee_name": "Nathan Holloway",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "7c6a2eb8cfb1024f",
+   "items": [
+    {
+     "item_id": "P0006",
+     "column": "Reg Hours",
+     "value": 70.25,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Replacement value in Regular column"
+    },
+    {
+     "item_id": "P0007",
+     "column": "Cash Tips Amount",
+     "value": 410.75,
+     "page": 1,
+     "raw_text": null,
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Code 21 = Tips in legend; decimal amount"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R005",
+   "row_kind": "earnings",
+   "employee_ref": "E006",
+   "employee_name": "Omar Brennan",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "fb84ecbfd1c0612b",
+   "items": [
+    {
+     "item_id": "P0008",
+     "column": "Reg Hours",
+     "value": 60.0,
+     "page": 2,
+     "raw_text": "60",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten 60 in Regular column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R006",
+   "row_kind": "earnings",
+   "employee_ref": "E007",
+   "employee_name": "Andre D Okonkwo",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "2758c503ade6eccf",
+   "items": [
+    {
+     "item_id": "P0009",
+     "column": "Reg Hours",
+     "value": 80.0,
+     "page": 2,
+     "raw_text": "80",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten 80 in Regular column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R007",
+   "row_kind": "earnings",
+   "employee_ref": "E009",
+   "employee_name": "Carlos Whitaker",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "1c8634979c3785ca",
+   "items": [
+    {
+     "item_id": "P0010",
+     "column": "Reg Hours",
+     "value": 60.0,
+     "page": 2,
+     "raw_text": "60",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten 60 in Regular column"
+    },
+    {
+     "item_id": "P0011",
+     "column": "OT Hours",
+     "value": 1.5,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "handwritten 1.5 in Overtime column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R008",
+   "row_kind": "earnings",
+   "employee_ref": "E010",
+   "employee_name": "Patricia Gutierrez",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "00fdea90bc6706f0",
+   "items": [
+    {
+     "item_id": "P0012",
+     "column": "Reg Hours",
+     "value": 76.5,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten 76.5 in Regular column"
+    },
+    {
+     "item_id": "P0013",
+     "column": "OT Hours",
+     "value": 4.5,
+     "page": 2,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "overtime",
+     "kind_basis": "position",
+     "evidence": "handwritten 4.5 in Overtime column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R009",
+   "row_kind": "earnings",
+   "employee_ref": "E011",
+   "employee_name": "Ian Abernathy",
+   "source_pages": [
+    3
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "85724a87735b8c53",
+   "items": [
+    {
+     "item_id": "P0014",
+     "column": "Reg Hours",
+     "value": 75.0,
+     "page": 3,
+     "raw_text": "75",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R010",
+   "row_kind": "earnings",
+   "employee_ref": "E012",
+   "employee_name": "SAMUEL PRUITT",
+   "source_pages": [
+    3
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "4dd3f33f85009972",
+   "items": [
+    {
+     "item_id": "P0015",
+     "column": "Reg Hours",
+     "value": 72.0,
+     "page": 3,
+     "raw_text": "72",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R011",
+   "row_kind": "earnings",
+   "employee_ref": "E013",
+   "employee_name": "James Tran",
+   "source_pages": [
+    3
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "8c41de0a5989b56e",
+   "items": [
+    {
+     "item_id": "P0016",
+     "column": "Reg Hours",
+     "value": 70.25,
+     "page": 3,
+     "raw_text": null,
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R012",
+   "row_kind": "earnings",
+   "employee_ref": "E014",
+   "employee_name": "HANNAH MORRISON",
+   "source_pages": [
+    3
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "3b5e43e18ba648ee",
+   "items": [
+    {
+     "item_id": "P0017",
+     "column": "Reg Hours",
+     "value": 72.0,
+     "page": 3,
+     "raw_text": "72",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "handwritten in Regular hours column"
+    },
+    {
+     "item_id": "P0018",
+     "column": "Cash Tips Amount",
+     "value": 228.4,
+     "page": 3,
+     "raw_text": "228.40",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "code 21 = Tips per legend; decimals amount"
+    }
+   ],
+   "total_pay": ""
+  }
+ ],
+ "unmapped_items": [],
+ "excluded_items": [
+  {
+   "item_id": "P0005",
+   "employee_ref": "E005",
+   "status": "struck_through",
+   "code": "1",
+   "amount": null
+  }
+ ],
+ "standing_deductions_omitted": 20,
+ "record_flags": [
+  {
+   "code": "HEADER_CONFLICT",
+   "severity": "warning"
+  },
+  {
+   "code": "HEADER_CONFLICT",
+   "severity": "warning"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "SF_NOT_CHECKED",
+   "severity": "warning"
+  }
+ ]
+}

@@ -1,0 +1,101 @@
+{
+ "run_id": "tc3-synth-02",
+ "at": "2026-10-27T15:45:22+00:00",
+ "manifest": {
+  "ready": 105
+ },
+ "record_states": {
+  "done": 96,
+  "failed@extract": 9
+ },
+ "records_exported": 96,
+ "review_status": {
+  "needs_review": 96
+ },
+ "review_reasons": {
+  "salesforce_not_checked": 96,
+  "uncertain_payable_value": 96,
+  "header_conflict": 5,
+  "hours_over_period": 15,
+  "sf_not_checked": 96,
+  "unresolved_pay_item": 55,
+  "totals_not_reconciled": 1
+ },
+ "pay_items": 777,
+ "totals": {
+  "reconciled": 0,
+  "not_reconciled": 1
+ },
+ "salesforce_checks": {},
+ "llm": {
+  "calls": 213,
+  "tokens": {
+   "input_tokens": 685038,
+   "output_tokens": 977139,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 692916
+  }
+ },
+ "failures": {
+  "00000017_069SYN000000000017": "failed@extract",
+  "00000031_069SYN000000000031": "failed@extract",
+  "00000045_069SYN000000000045": "failed@extract",
+  "00000046_069SYN000000000046": "failed@extract",
+  "00000060_069SYN000000000060": "failed@extract",
+  "00000063_069SYN000000000063": "failed@extract",
+  "00000071_069SYN000000000071": "failed@extract",
+  "00000080_069SYN000000000080": "failed@extract",
+  "00000100_069SYN000000000100": "failed@extract"
+ },
+ "import_csv": {
+  "records": 96,
+  "rows": 365,
+  "flagged_rows": 362,
+  "unmapped_items": 192,
+  "not_produced": 0
+ },
+ "api": {
+  "http_attempts": 225,
+  "http_by_status": {
+   "400": 5,
+   "200": 220
+  },
+  "calls_ok": 213,
+  "calls_error": 8,
+  "calls_retried": 30,
+  "tool_choice_fallbacks": [
+   {
+    "model": "claude-sonnet-5-5",
+    "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CgSyj3DLWhW9972kSifHP'}"
+   }
+  ],
+  "errors": {
+   "400 invalid_request_error": {
+    "count": 5,
+    "message": "tool_choice: type \"tool\" and \"any\" are not supported for this model.",
+    "request_ids": [
+     "req_011CgSyj3DLWhW9972kSifHP",
+     "req_011CgSyj3AcQvUxDqybYtDdG",
+     "req_011CgSyj4dAqtSe5KsFQeDCx",
+     "req_011CgSyj4hNouU5FxJDCsfhT",
+     "req_011CgSyj4dezDXHMLpptBjii"
+    ],
+    "records": [
+     "00000002_069SYN000000000002",
+     "00000003_069SYN000000000003"
+    ]
+   }
+  },
+  "latency_s": {
+   "p50": 18.43,
+   "p95": 106.54
+  },
+  "usage": {
+   "input_tokens": 685038,
+   "output_tokens": 977139,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 692916
+  },
+  "prompt_cache_hit_ratio": 1.0
+ }
+}

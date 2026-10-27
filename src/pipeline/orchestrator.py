@@ -72,7 +72,7 @@ def run_record(ctx: Context, entry: dict, from_stage: str | None = None, to_stag
             break
         except Exception as e:
             log.exception("%s failed at %s", entry["record_id"], stage.name)
-            rec.set_state(stage.name, status="failed", finished=now(), error=f"{type(e).__name__}: {e}"[:500])
+            rec.set_state(stage.name, status="failed", finished=now(), error=f"{type(e).__name__}: {e}"[:2000])
             result["stages"][stage.name] = f"failed: {e}"
             break
     return result
@@ -82,12 +82,21 @@ def run_records(ctx: Context, record_ids: list[str] | None = None, **kw) -> list
     entries = [m for m in ctx.run.manifest() if m.get("status") == "ready"
                and (record_ids is None or m["record_id"] in record_ids)]
     out = []
-    with ThreadPoolExecutor(max_workers=max(1, ctx.cfg.max_records)) as ex:
+    ex = ThreadPoolExecutor(max_workers=max(1, ctx.cfg.max_records))
+    futs = {}
+    try:
         futs = {ex.submit(run_record, ctx, e, **kw): e["record_id"] for e in entries}
         for f in as_completed(futs):
             r = f.result()
             out.append(r)
             log.info("%s: %s", r["record_id"], ", ".join(f"{k}={v.split(':')[0]}" for k, v in r["stages"].items()))
+    except BaseException:
+        # Interrupted (Ctrl-C or SIGTERM): records not yet started are dropped; running ones finish their stage.
+        pending = sum(1 for f in futs if not f.done() and not f.running())
+        log.warning("run interrupted: %d record(s) not started, skipped", pending)
+        ex.shutdown(wait=False, cancel_futures=True)
+        raise
+    ex.shutdown()
     return out
 
 

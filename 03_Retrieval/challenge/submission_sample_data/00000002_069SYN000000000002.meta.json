@@ -1,0 +1,316 @@
+{
+ "schema_version": "1",
+ "template": "import_template_charter",
+ "columns": [
+  "Employee Last Name",
+  "Pay Rate(Optional)",
+  "Reg Hours",
+  "OT Hours",
+  "Vacation Hours",
+  "Sick Hours",
+  "Holiday Hours",
+  "PTO Hours",
+  "Other Hours",
+  "Cash Tips Amount",
+  "Credit Tips Amount",
+  "Bonus Amount",
+  "Commission Amount",
+  "Other Amount",
+  "Department (optional)",
+  "Deduction Code (Optional)",
+  "Deduction Amount (Optional)",
+  "Project (optional)",
+  "Job (optional)"
+ ],
+ "record_id": "00000002_069SYN000000000002",
+ "case_number": "00000002",
+ "review_status": "needs_review",
+ "review_reasons": [
+  "salesforce_not_checked",
+  "uncertain_payable_value",
+  "header_conflict",
+  "sf_not_checked"
+ ],
+ "document": {
+  "client": {
+   "name": "NORTHGATE LOGISTICS LLC",
+   "number": "91650698A"
+  },
+  "pay_period": {
+   "Pay Period Start": "03/28/2026",
+   "Pay Period End": "04/10/2026",
+   "Check Date": "04/17/2026",
+   "Pay Frequency": "B"
+  },
+  "doc_type": "coad_payroll_timesheet_report",
+  "page_count": 2
+ },
+ "rows": [
+  {
+   "row_id": "R001",
+   "row_kind": "earnings",
+   "employee_ref": "E002",
+   "employee_name": "Eric Henderson",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED",
+    "UNPLACED P0002: code 28 'OTHER' = 24 hours (no amount)"
+   ],
+   "fingerprint": "e6a373c112458fb1",
+   "items": [
+    {
+     "item_id": "P0001",
+     "column": "Reg Hours",
+     "value": 64.0,
+     "page": 1,
+     "raw_text": "64",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Regular hours column"
+    },
+    {
+     "item_id": "P0003",
+     "column": "Cash Tips Amount",
+     "value": 287.0,
+     "page": 1,
+     "raw_text": "287",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Earnings code 21 = Tips in legend"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R002",
+   "row_kind": "earnings",
+   "employee_ref": "E003",
+   "employee_name": "Rachel Brennan",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "ddb0ebb3eebe6379",
+   "items": [
+    {
+     "item_id": "P0004",
+     "column": "Reg Hours",
+     "value": 40.0,
+     "page": 1,
+     "raw_text": "40",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Regular hours column"
+    },
+    {
+     "item_id": "P0005",
+     "column": "Cash Tips Amount",
+     "value": 96.0,
+     "page": 1,
+     "raw_text": "96",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Code 21 = Tips"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R003",
+   "row_kind": "earnings",
+   "employee_ref": "E004",
+   "employee_name": "Alicia D Santoro",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "ca8cfedf633b48fb",
+   "items": [
+    {
+     "item_id": "P0006",
+     "column": "Reg Hours",
+     "value": 64.0,
+     "page": 1,
+     "raw_text": "64",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Regular hours column"
+    },
+    {
+     "item_id": "P0007",
+     "column": "Cash Tips Amount",
+     "value": 449.0,
+     "page": 1,
+     "raw_text": "449",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "Code 21 = Tips"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R004",
+   "row_kind": "earnings",
+   "employee_ref": "E005",
+   "employee_name": "Angela G Okafor",
+   "source_pages": [
+    1
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES"
+   ],
+   "fingerprint": "5f310a88a44c877f",
+   "items": [
+    {
+     "item_id": "P0008",
+     "column": "Reg Hours",
+     "value": 40.0,
+     "page": 1,
+     "raw_text": "40",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "Regular hours column"
+    }
+   ],
+   "total_pay": ""
+  },
+  {
+   "row_id": "R005",
+   "row_kind": "earnings",
+   "employee_ref": "E006",
+   "employee_name": "Susan Hoffman",
+   "source_pages": [
+    2
+   ],
+   "flags": [
+    "RATE_FROM_ATTRIBUTES",
+    "TIPS_TYPE_ASSUMED"
+   ],
+   "fingerprint": "84409bb059012405",
+   "items": [
+    {
+     "item_id": "P0010",
+     "column": "Reg Hours",
+     "value": 64.0,
+     "page": 2,
+     "raw_text": "64",
+     "confidence": "medium",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "regular",
+     "kind_basis": "position",
+     "evidence": "64 written under struck 60 in Regular column"
+    },
+    {
+     "item_id": "P0011",
+     "column": "Cash Tips Amount",
+     "value": 142.5,
+     "page": 2,
+     "raw_text": "142.50",
+     "confidence": "high",
+     "status": "submitted",
+     "source": "handwritten",
+     "kind": "tips_unspecified",
+     "kind_basis": "legend",
+     "evidence": "code 21 = Tips in legend; decimals amount"
+    }
+   ],
+   "total_pay": ""
+  }
+ ],
+ "unmapped_items": [
+  {
+   "item_id": "P0002",
+   "employee_ref": "E002",
+   "item_type": "earning",
+   "code": "28",
+   "legend": "OTHER",
+   "label": "OTHER",
+   "amount": null,
+   "quantity": {
+    "value": 24.0,
+    "unit": "hours"
+   },
+   "reason": "no amount"
+  }
+ ],
+ "excluded_items": [
+  {
+   "item_id": "P0009",
+   "employee_ref": "E006",
+   "status": "struck_through",
+   "code": "1",
+   "amount": null
+  }
+ ],
+ "standing_deductions_omitted": 4,
+ "record_flags": [
+  {
+   "code": "HEADER_CONFLICT",
+   "severity": "warning"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "PAGE_ISSUE",
+   "severity": "info"
+  },
+  {
+   "code": "SF_NOT_CHECKED",
+   "severity": "warning"
+  }
+ ]
+}

@@ -146,7 +146,7 @@ class ReplayLLMClient:
         self._pages: dict[str, dict] = {}
         self.calls = 0
 
-    def call_tool(self, *, model, system, content, tool_name, tool_description, input_schema, max_tokens):
+    def call_tool(self, *, model, system, content, tool_name, tool_description, input_schema, max_tokens, trace=None):
         self.calls += 1
         text = "\n".join(c.get("text", "") for c in content if c.get("type") == "text")
         if tool_name == "record_page":

@@ -86,7 +86,8 @@ def run(ctx: Context, rec, entry: dict) -> None:
         res = ctx.llm.call_tool(model=ctx.cfg.classify_model, system=CLASSIFY_SYSTEM,
                                 content=[image_block(rec.page_image(1), media_type=media_type), text_block("Classify this first page.")],
                                 tool_name="classify_document", tool_description="Record the document type.",
-                                input_schema=CLASSIFY_SCHEMA, max_tokens=300)
+                                input_schema=CLASSIFY_SCHEMA, max_tokens=300,
+                                trace={"record_id": rec.record_id, "stage": "classify"})
         rec.log_llm({"stage": "classify", "model": res.model, "usage": res.usage, "latency_s": res.latency_s, "at": now()})
         rec.write("classify.json", {"doc_type": res.data.get("doc_type", "other"), "method": "llm",
                                     "reason": res.data.get("reason"), "model": res.model, "at": now()})

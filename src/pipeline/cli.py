@@ -5,6 +5,7 @@
   run        run record stages (all, or --from/--to a stage) for all or selected records
   export     write JSONL, workbook, Earning by Column draft and run_summary.json
   status     print stage status per record
+  diagnose   summarise the Anthropic API log for a run (errors, retries, fallbacks, latency, cache)
   all        ingest + snapshot + run + export
 """
 from __future__ import annotations
@@ -12,10 +13,14 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
+import signal
 import sys
 from datetime import date, timedelta
 from pathlib import Path
 
+from .. import logsetup
+from . import apilog
 from .config import PipelineConfig
 from .orchestrator import run_records, write_run_info
 from .stages import STAGE_NAMES
@@ -23,7 +28,7 @@ from .stages import ingest as ingest_mod
 from .stages.base import Context
 from .stages.export import export
 from .stages.sf_snapshot import snapshot_cases
-from .store import RunStore
+from .store import RunStore, read_jsonl, write_json
 
 
 def _sf_client(cfg: PipelineConfig):
@@ -33,7 +38,7 @@ def _sf_client(cfg: PipelineConfig):
     return SalesforceReadOnlyClient(cfg.sf_username, cfg.sf_password, cfg.sf_security_token, cfg.sf_domain)
 
 
-def _llm(cfg: PipelineConfig, kind: str, replay: str | None = None):
+def _llm(cfg: PipelineConfig, kind: str, run: RunStore, replay: str | None = None):
     if kind == "none":
         return None
     if kind == "replay":
@@ -42,7 +47,9 @@ def _llm(cfg: PipelineConfig, kind: str, replay: str | None = None):
             raise SystemExit("--replay <jsonl> is required with --llm replay")
         return ReplayLLMClient(Path(replay))
     from .llm.client import AnthropicClient
-    return AnthropicClient(max_retries=cfg.api_max_retries)
+    return AnthropicClient(max_retries=cfg.api_max_retries,
+                           event_log=apilog.ApiEventLog(run.root / "logs" / "api_calls.jsonl"),
+                           tool_choice=cfg.tool_choice)
 
 
 def build_context(args) -> Context:
@@ -66,7 +73,7 @@ def build_context(args) -> Context:
         cfg.output_format = run.get_output_format()
     need_sf = (args.command in ("snapshot", "all") or (args.command == "ingest" and args.source == "salesforce")) \
         and not args.no_sf and not args.snapshot_from_records
-    llm = _llm(cfg, llm_kind, getattr(args, "replay", None)) \
+    llm = _llm(cfg, llm_kind, run, getattr(args, "replay", None)) \
         if args.command in ("run", "all") else None
     return Context(cfg=cfg, run=run, llm=llm,
                    sf=_sf_client(cfg) if need_sf else None,
@@ -74,10 +81,35 @@ def build_context(args) -> Context:
                             "force_render": "preprocess" in (getattr(args, "force", None) or [])})
 
 
+def _terminate(signum, frame):
+    # docker stop sends SIGTERM. Raising here lets the run's finally block export what has finished.
+    raise KeyboardInterrupt(f"signal {signum}")
+
+
+def _export_and_report(ctx: Context, args) -> None:
+    s = export(ctx, workbook=not args.no_workbook)
+    print(json.dumps({k: s[k] for k in ("records_exported", "review_status", "totals", "salesforce_checks", "llm", "failures")},
+                     indent=1))
+    host = os.getenv("HOST_RUNS_DIR")
+    where = f" (on the host: {host}/{ctx.run.run_id})" if host else ""
+    logging.info("outputs: %s%s", ctx.run.root, where)
+    print(f"outputs: {ctx.run.root}{where}")
+
+
+def _diagnose(ctx: Context) -> None:
+    path = ctx.run.root / "logs" / "api_calls.jsonl"
+    events = read_jsonl(path)
+    summary = apilog.summarize(events)
+    write_json(ctx.run.root / "logs" / "api_summary.json", summary)
+    print(json.dumps(summary, indent=1))
+    if not events:
+        print(f"no API events in {path}")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m src.pipeline.cli", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=["ingest", "snapshot", "run", "export", "status", "all"])
+    ap.add_argument("command", choices=["ingest", "snapshot", "run", "export", "status", "all", "diagnose"])
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--runs-dir")
     ap.add_argument("--source", choices=["folder", "salesforce"], default="folder")
@@ -101,12 +133,20 @@ def main(argv=None) -> int:
     ap.add_argument("--no-sf", action="store_true", help="do not connect to Salesforce")
     ap.add_argument("--snapshot-from-records", help="build offline Salesforce snapshots from a verified v2 JSONL")
     ap.add_argument("--no-workbook", action="store_true")
-    ap.add_argument("-v", "--verbose", action="store_true")
+    ap.add_argument("-v", "--verbose", action="store_true", help="DEBUG for src.* only; SDK and httpx stay at INFO")
     args = ap.parse_args(argv)
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
-                        format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     ctx = build_context(args)
+    cfg = ctx.cfg
+    logsetup.configure(ctx.run.root, "pipeline", cfg.log_level, args.verbose)
+    logging.info("start: command=%s run=%s output_format=%s models extract=%s classify=%s amend=%s "
+                 "concurrency=%d tool_choice=%s allow_pii_to_llm=%s", args.command, args.run_id, cfg.output_format,
+                 cfg.extract_model, cfg.classify_model, cfg.amend_model, cfg.max_llm_concurrency, cfg.tool_choice,
+                 cfg.allow_pii_to_llm)
     write_run_info(ctx, " ".join(sys.argv if argv is None else argv))
+    try:
+        signal.signal(signal.SIGTERM, _terminate)
+    except ValueError:  # not on the main thread (tests): leave the default handler
+        pass
 
     if args.command in ("ingest", "all"):
         if args.source == "folder":
@@ -125,16 +165,21 @@ def main(argv=None) -> int:
         st = snapshot_cases(ctx)
         logging.info("snapshots: %s", json.dumps({k: sum(1 for v in st.values() if v == k) for k in set(st.values())}))
     if args.command in ("run", "all"):
-        run_records(ctx, args.records.split(",") if args.records else None,
-                    from_stage=args.from_stage, to_stage=args.to_stage, force=set(args.force or []))
-    if args.command in ("export", "all", "run"):
-        s = export(ctx, workbook=not args.no_workbook)
-        print(json.dumps({k: s[k] for k in ("records_exported", "review_status", "totals", "salesforce_checks", "llm", "failures")}, indent=1))
+        try:
+            run_records(ctx, args.records.split(",") if args.records else None,
+                        from_stage=args.from_stage, to_stage=args.to_stage, force=set(args.force or []))
+        finally:
+            # Export even when the run was interrupted, so the records that finished are visible to the review app.
+            _export_and_report(ctx, args)
+    elif args.command == "export":
+        _export_and_report(ctx, args)
     if args.command == "status":
         print(f"output_format={ctx.cfg.output_format}")
         for rid in ctx.run.record_ids():
             st = ctx.run.record(rid).state()
             print(rid, " ".join(f"{s}={st.get(s, {}).get('status', '-')}" for s in STAGE_NAMES))
+    if args.command == "diagnose":
+        _diagnose(ctx)
     return 0
 
 

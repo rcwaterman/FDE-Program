@@ -1,0 +1,7 @@
+﻿Employee Last Name,Pay Rate(Optional),Reg Hours,OT Hours,Vacation Hours,Sick Hours,Holiday Hours,PTO Hours,Other Hours,Cash Tips Amount,Credit Tips Amount,Bonus Amount,Commission Amount,Other Amount,Department (optional),Deduction Code (Optional),Deduction Amount (Optional),Project (optional),Job (optional)
+HENDERSON,22,78,10,,,,8,,,,,,,000030 SALES BUILDING,,,,
+Gutierrez,13.5,40,,,,,8,,142.50,,,,,000042 BAR,,,,
+KIM,16.25,70.25,,,,,,,185.00,,,,,000042 BAR,,,,
+KIM,13.5,76.5,,,,,,,,,,,,000028 SALES LUMBER,,,,
+Lindqvist,16.25,80,1.5,,,,,,410.75,,,,,000043 SERVERS,,,,
+PRUITT,19.5,76.5,,,,,,,96.00,,,,,000043 SERVERS,EC,15.00,,
