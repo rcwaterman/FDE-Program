@@ -27,6 +27,7 @@ Use roles, not names. This is a public repo.
 | 3 | Payroll Manager | Is a partially pre-filled import template still useful when handwritten hours are blank? | Yes. Keying hours into a one-page spreadsheet is still faster than working in the payroll system. The payroll manager sometimes types directly into the import spreadsheet for speed. | Pre-fill typed fields and leave handwritten hours blank for the rep to complete. |
 | 3 | Payroll Manager | Does the default import template already include employee information? | Yes. The default import file lists all active employees with their employee number and name. It does not include pay rate or department unless those values change for the payroll. | Generate the pre-filled template from the same employee data the default import uses. |
 | 3 | Payroll Manager | Can Social Security numbers be used as employee identifiers? | Gold can technically use Social Security numbers, but clients are not asked to send them by email. | Use employee numbers as the identifier and keep Social Security numbers out of emailed outputs. |
+| 5 | Payroll Manager | TBD (meeting 11/11, see use_case/decisions.md for details)| TBD (meeting 11/11, see use_case/decisions.md for details) | TBD (meeting 11/11, see use_case/decisions.md for details) |
 
 ---
 

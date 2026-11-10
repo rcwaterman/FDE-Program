@@ -1,0 +1,44 @@
+{
+ "http_attempts": 225,
+ "http_by_status": {
+  "400": 5,
+  "200": 220
+ },
+ "calls_ok": 213,
+ "calls_error": 8,
+ "calls_retried": 30,
+ "tool_choice_fallbacks": [
+  {
+   "model": "claude-sonnet-5-5",
+   "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CgSyj3DLWhW9972kSifHP'}"
+  }
+ ],
+ "errors": {
+  "400 invalid_request_error": {
+   "count": 5,
+   "message": "tool_choice: type \"tool\" and \"any\" are not supported for this model.",
+   "request_ids": [
+    "req_011CgSyj3DLWhW9972kSifHP",
+    "req_011CgSyj3AcQvUxDqybYtDdG",
+    "req_011CgSyj4dAqtSe5KsFQeDCx",
+    "req_011CgSyj4hNouU5FxJDCsfhT",
+    "req_011CgSyj4dezDXHMLpptBjii"
+   ],
+   "records": [
+    "00000002_069SYN000000000002",
+    "00000003_069SYN000000000003"
+   ]
+  }
+ },
+ "latency_s": {
+  "p50": 18.43,
+  "p95": 106.54
+ },
+ "usage": {
+  "input_tokens": 685038,
+  "output_tokens": 977139,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 692916
+ },
+ "prompt_cache_hit_ratio": 1.0
+}
