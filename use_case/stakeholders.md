@@ -28,7 +28,7 @@ Use roles, not names. This is a public repo.
 | 3 | Payroll Manager | Does the default import template already include employee information? | Yes. The default import file lists all active employees with their employee number and name. It does not include pay rate or department unless those values change for the payroll. | Generate the pre-filled template from the same employee data the default import uses. |
 | 3 | Payroll Manager | Can Social Security numbers be used as employee identifiers? | Gold can technically use Social Security numbers, but clients are not asked to send them by email. | Use employee numbers as the identifier and keep Social Security numbers out of emailed outputs. |
 | 5 | Payroll Manager | TBD (meeting 11/11, see use_case/decisions.md for details)| TBD (meeting 11/11, see use_case/decisions.md for details) | TBD (meeting 11/11, see use_case/decisions.md for details) |
-
+| 6 | Payroll Manager | What is the impact of the flagged vulnerabilities in the actual payroll submission pipeline? | The payroll manager insisted that the attack vectors present in this redteaming effort are entirely mitigated by the human in the loop review done by the payroll specialists. Adding new employees or paying employees greater than what is submitted on the payroll timesheet cannot be done within the process this automation touches. Additionally, the model we are using for this application is claude Sonnet 5.5, which denies all of these attacks. | TBD |
 ---
 
 ## Not everyone is an infrastructure contact
