@@ -19,6 +19,15 @@ If you cannot name what you did not do, you did not choose.
 | 5 | What the room asked | The stakeholder meeting is being held tomorrow (11/11). My team and I were on travel last week for budget planning and presenting to the ELT/Board, so we could not hold this sooner. | N/A | N/A |
 | 5 | Testing plan | We are opting to test for 3 days internally, extracting and processing 10 payrolls per hour at random over the course of this period. The outputs are tracked for review by the payroll specialists for accuracy. The results of the review will be put into a spreadsheet with pre-set calculated columns to provide an accuracy summary of Claude's outputs against the specialists final review. | N/A | N/A |
 
+## Ladder Table for guardrails
+| Level | Ships? | Cost / latency | Catches (this test) | Real answers withheld | What you are accepting instead |
+|---|---|---|---|---|---|
+| 0 Constrained decoding | **Already there, partial** | none | Shape only: `action` is a closed enum via the forced tool + schema | n/a | Amounts, names and quotes are free strings, so a valid-looking wrong amendment passes. Behind a closed API there is no logit control. Provider structured output is already used |
+| 1 Rules | **Ships, as hold-for-review not drop** | under 0.3 ms (stage 1.5 -> 1.7 ms) | 68 -> 45 of 104 runs | 0/24 measured, but 5/15 on adversarial near-miss benign mail | English-only regexes: the Spanish and encoded variants walk past. Treat as a tripwire, not a defence |
+| 2 Classifier | **Declines** | needs an embedding model download and labelled data I do not have | not built | not measured | Attackers who sound like customers, which is most of them here; a classifier trained on injection phrasing would not catch "please exclude Vic" |
+| 3 LLM judge | **Evaluator, not guardrail** | ~10-16 s per call on the local 27B; requests/day not known, fill in | not built | n/a | Run on a sample of threads after the fact (batch, not interactive: payroll runs are batch, so inline latency is cheap, but a judge sees the same text as the amender and shares its blind spots, and a hijacked amender and a hijacked judge fail together). Findings become the next L1/L4 rule |
+| 4 Policy layer | **Ships. This is the fix** | under 0.3 ms (stage 1.5 -> 1.6 ms) | authority + grounding + cap take 68 -> 8 of 104 together | 9/24 legitimate pay-change runs held for a person (grounding); 0 by authority and cap | A known contact acting maliciously, and the Spanish exclusion. The permission rule that was only implicit in the prompt, "Messages from support@staff.example are company staff", becomes code: the sender is checked against the account's contacts and the Salesforce `Incoming` flag, not against what the email says about itself |
+| 5 Human | **Already there; make it real** | specialist time | the only control that sees the remaining 8/104 | n/a | Today amendment items carry `confidence: "high"` and an `info` flag. Held amendments should be `warning`, and any exclusion of an employee should need a second look |
 
 ---
 
